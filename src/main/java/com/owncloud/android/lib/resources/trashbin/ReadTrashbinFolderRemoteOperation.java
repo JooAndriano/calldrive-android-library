@@ -47,13 +47,13 @@ import java.util.ArrayList;
  * Remote operation performing the read of remote trashbin folder on Calldrive server.
  */
 
-public class ReadTrashbinFolderRemoteOperation extends RemoteOperation<B> {
+public class ReadTrashbinFolderRemoteOperation extends RemoteOperation {
 
     private static final String TAG = ReadTrashbinFolderRemoteOperation.class.getSimpleName();
-    
+
     private String remotePath;
     private ArrayList<Object> folderAndFiles;
-    
+
     /**
      * Constructor
      *
@@ -69,27 +69,27 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result = null;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result = null;
         PropFindMethod query = null;
 
         try {
             String baseUri = client.getNewWebdavUri() + "/trashbin/" + client.getUserId() + "/trash";
             DavPropertyNameSet propSet = WebdavUtils.getTrashbinPropSet();
-                
+
             query = new PropFindMethod(baseUri + WebdavUtils.encodePath(remotePath), propSet, DavConstants.DEPTH_1);
             int status = client.executeMethod(query);
 
             // check and process response
             boolean isSuccess = (status == HttpStatus.SC_MULTI_STATUS || status == HttpStatus.SC_OK);
-            
+
             if (isSuccess) {
                 // get data from remote folder
                 MultiStatus dataInServer = query.getResponseBodyAsMultiStatus();
                 readData(dataInServer, client);
 
                 // Result of the operation
-                result = new RemoteOperationResult<B>(true, query);
+                result = new RemoteOperationResult(true, query);
                 // Add data to the result
                 if (result.isSuccess()) {
                     result.setData(folderAndFiles);
@@ -97,16 +97,16 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation<B> {
             } else {
                 // synchronization failed
                 client.exhaustResponse(query.getResponseBodyAsStream());
-                result = new RemoteOperationResult<B>(false, query);
+                result = new RemoteOperationResult(false, query);
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
         } finally {
             if (query != null)
                 query.releaseConnection();  // let the connection available for other methods
 
             if (result == null) {
-                result = new RemoteOperationResult<B>(new Exception("unknown error"));
+                result = new RemoteOperationResult(new Exception("unknown error"));
                 Log_OC.e(TAG, "Synchronized " + remotePath + ": failed");
             } else {
                 if (result.isSuccess()) {
@@ -121,7 +121,7 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation<B> {
                 }
             }
         }
-        
+
         return result;
     }
 

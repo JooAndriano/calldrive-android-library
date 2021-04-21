@@ -44,7 +44,7 @@ import java.io.IOException;
  *
  * @author Bartosz Przybylski
  */
-public abstract class OCSRemoteOperation extends RemoteOperation<B> {
+public abstract class OCSRemoteOperation extends RemoteOperation {
 
     @Deprecated
     public <T> T getServerResponse(HttpMethodBase method, TypeToken<T> type) throws IOException {
