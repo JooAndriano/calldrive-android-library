@@ -52,7 +52,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * accessible via the notifications endpoint at {@value OCS_ROUTE_LIST_V12_AND_UP}, specified at
  * {@link "https://github.com/calldrive/notifications/blob/master/docs/ocs-endpoint-v2.md"}.
  */
-public class GetNotificationRemoteOperation extends RemoteOperation<B> {
+public class GetNotificationRemoteOperation extends RemoteOperation {
 
     // OCS Route
     private static final String OCS_ROUTE_LIST_V12_AND_UP =
@@ -71,8 +71,8 @@ public class GetNotificationRemoteOperation extends RemoteOperation<B> {
 
     @SuppressFBWarnings("HTTP_PARAMETER_POLLUTION")
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         int status;
         GetMethod get = null;
         List<Notification> notifications = new ArrayList<>();
@@ -87,14 +87,14 @@ public class GetNotificationRemoteOperation extends RemoteOperation<B> {
             String response = get.getResponseBodyAsString();
 
             if (isSuccess(status)) {
-                result = new RemoteOperationResult<B>(true, status, get.getResponseHeaders());
+                result = new RemoteOperationResult(true, status, get.getResponseHeaders());
                 Log_OC.d(this, "Successful response: " + response);
 
                 // Parse the response
                 notifications.add(parseResult(response));
                 result.setNotificationData(notifications);
             } else {
-                result = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
+                result = new RemoteOperationResult(false, status, get.getResponseHeaders());
                 Log_OC.e(this, "Failed response while getting user notifications ");
                 if (response != null) {
                     Log_OC.e(this, "*** status code: " + status + " ; response message: " + response);
@@ -103,7 +103,7 @@ public class GetNotificationRemoteOperation extends RemoteOperation<B> {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(this, "Exception while getting remote notifications", e);
         } finally {
             if (get != null) {

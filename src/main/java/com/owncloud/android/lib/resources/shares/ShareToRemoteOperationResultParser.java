@@ -59,12 +59,12 @@ public class ShareToRemoteOperationResultParser {
         serverBaseUri = serverBaseURi;
     }
 
-    public RemoteOperationResult<B> parse(String serverResponse) {
+    public RemoteOperationResult parse(String serverResponse) {
         if (serverResponse == null || serverResponse.length() == 0) {
-            return new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
+            return new RemoteOperationResult(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
         }
 
-        RemoteOperationResult<B> result = null;
+        RemoteOperationResult result = null;
         ArrayList<Object> resultData = new ArrayList<Object>();
 
         try {
@@ -78,7 +78,7 @@ public class ShareToRemoteOperationResultParser {
 
             if (shareXmlParser.isSuccess()) {
                 if ((shares != null && shares.size() > 0) || !oneOrMoreSharesRequired) {
-                    result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.OK);
+                    result = new RemoteOperationResult(RemoteOperationResult.ResultCode.OK);
                     if (shares != null) {
                         for (OCShare share : shares) {
                             resultData.add(share);
@@ -101,37 +101,37 @@ public class ShareToRemoteOperationResultParser {
                     result.setData(resultData);
 
                 } else {
-                    result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
+                    result = new RemoteOperationResult(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
                     Log_OC.e(TAG, "Successful status with no share in the response");
                 }
 
             } else if (shareXmlParser.isWrongParameter()) {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.SHARE_WRONG_PARAMETER);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.SHARE_WRONG_PARAMETER);
                 resultData.add(shareXmlParser.getMessage());
                 result.setData(resultData);
 
             } else if (shareXmlParser.isNotFound()) {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.SHARE_NOT_FOUND);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.SHARE_NOT_FOUND);
                 resultData.add(shareXmlParser.getMessage());
                 result.setData(resultData);
 
             } else if (shareXmlParser.isForbidden()) {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.SHARE_FORBIDDEN);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.SHARE_FORBIDDEN);
                 resultData.add(shareXmlParser.getMessage());
                 result.setData(resultData);
 
             } else {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
 
             }
 
         } catch (XmlPullParserException e) {
             Log_OC.e(TAG, "Error parsing response from server ", e);
-            result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
+            result = new RemoteOperationResult(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
 
         } catch (IOException e) {
             Log_OC.e(TAG, "Error reading response from server ", e);
-            result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
+            result = new RemoteOperationResult(RemoteOperationResult.ResultCode.WRONG_SERVER_RESPONSE);
         }
 
         return result;

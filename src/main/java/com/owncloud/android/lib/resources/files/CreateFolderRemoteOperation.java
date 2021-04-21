@@ -42,7 +42,7 @@ import org.apache.jackrabbit.webdav.client.methods.MkColMethod;
  * @author David A. Velasco
  * @author masensio
  */
-public class CreateFolderRemoteOperation extends RemoteOperation<B> {
+public class CreateFolderRemoteOperation extends RemoteOperation {
 
     private static final String TAG = CreateFolderRemoteOperation.class.getSimpleName();
 
@@ -77,8 +77,8 @@ public class CreateFolderRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
 
         result = createFolder(client);
         if (!result.isSuccess() && createFullPath &&
@@ -94,8 +94,8 @@ public class CreateFolderRemoteOperation extends RemoteOperation<B> {
     }
 
 
-    private RemoteOperationResult<B> createFolder(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    private RemoteOperationResult createFolder(OwnCloudClient client) {
+        RemoteOperationResult result;
         MkColMethod mkCol = null;
         try {
             mkCol = new MkColMethod(client.getWebdavUri() + WebdavUtils.encodePath(remotePath));
@@ -107,15 +107,15 @@ public class CreateFolderRemoteOperation extends RemoteOperation<B> {
             client.executeMethod(mkCol, READ_TIMEOUT, CONNECTION_TIMEOUT);
 
             if (HttpStatus.SC_METHOD_NOT_ALLOWED == mkCol.getStatusCode()) {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.FOLDER_ALREADY_EXISTS);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.FOLDER_ALREADY_EXISTS);
             } else {
-                result = new RemoteOperationResult<B>(mkCol.succeeded(), mkCol);
+                result = new RemoteOperationResult(mkCol.succeeded(), mkCol);
             }
 
             Log_OC.d(TAG, "Create directory " + remotePath + ": " + result.getLogMessage());
             client.exhaustResponse(mkCol.getResponseBodyAsStream());
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Create directory " + remotePath + ": " + result.getLogMessage(), e);
 
         } finally {
@@ -125,8 +125,8 @@ public class CreateFolderRemoteOperation extends RemoteOperation<B> {
         return result;
     }
 
-    private RemoteOperationResult<B> createParentFolder(String parentPath, OwnCloudClient client) {
-        RemoteOperation<B> operation = new CreateFolderRemoteOperation(parentPath, createFullPath);
+    private RemoteOperationResult createParentFolder(String parentPath, OwnCloudClient client) {
+        RemoteOperation operation = new CreateFolderRemoteOperation(parentPath, createFullPath);
         return operation.execute(client);
     }
 

@@ -44,7 +44,7 @@ import java.util.ArrayList;
 /**
  * Check if file is up to date, by checking only eTag
  */
-public class CheckEtagRemoteOperation extends RemoteOperation<B> {
+public class CheckEtagRemoteOperation extends RemoteOperation {
 
     private static final int SYNC_READ_TIMEOUT = 40000;
     private static final int SYNC_CONNECTION_TIMEOUT = 5000;
@@ -60,7 +60,7 @@ public class CheckEtagRemoteOperation extends RemoteOperation<B> {
 
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         PropFindMethod propfind = null;
         
         try {
@@ -79,9 +79,9 @@ public class CheckEtagRemoteOperation extends RemoteOperation<B> {
                         .get(DavPropertyName.GETETAG).getValue());
 
                 if (etag.equals(expectedEtag)) {
-                    return new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.ETAG_UNCHANGED);
+                    return new RemoteOperationResult(RemoteOperationResult.ResultCode.ETAG_UNCHANGED);
                 } else {
-                    RemoteOperationResult<B> result = new RemoteOperationResult<B>(
+                    RemoteOperationResult result = new RemoteOperationResult(
                             RemoteOperationResult.ResultCode.ETAG_CHANGED);
 
                     ArrayList<Object> list = new ArrayList<>();
@@ -93,7 +93,7 @@ public class CheckEtagRemoteOperation extends RemoteOperation<B> {
             }
             
             if (status == HttpStatus.SC_NOT_FOUND) {
-                return new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.FILE_NOT_FOUND);
+                return new RemoteOperationResult(RemoteOperationResult.ResultCode.FILE_NOT_FOUND);
             }
         } catch (Exception e) {
             Log_OC.e(TAG, "Error while retrieving eTag");
@@ -103,6 +103,6 @@ public class CheckEtagRemoteOperation extends RemoteOperation<B> {
             }
         }
 
-        return new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.ETAG_CHANGED);
+        return new RemoteOperationResult(RemoteOperationResult.ResultCode.ETAG_CHANGED);
     }
 }

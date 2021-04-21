@@ -43,7 +43,7 @@ import org.json.JSONException;
 
 import java.lang.reflect.Type;
 
-public class RegisterAccountDeviceForNotificationsOperation extends RemoteOperation<B> {
+public class RegisterAccountDeviceForNotificationsOperation extends RemoteOperation {
     // OCS Route
     private static final String OCS_ROUTE =
             "/ocs/v2.php/apps/notifications/api/v2/push?format=json";
@@ -73,8 +73,8 @@ public class RegisterAccountDeviceForNotificationsOperation extends RemoteOperat
     }
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         int status;
         PushResponse pushResponse;
         Utf8PostMethod post = null;
@@ -92,7 +92,7 @@ public class RegisterAccountDeviceForNotificationsOperation extends RemoteOperat
             String response = post.getResponseBodyAsString();
 
             if (isSuccess(status)) {
-                result = new RemoteOperationResult<B>(true, status, post.getResponseHeaders());
+                result = new RemoteOperationResult(true, status, post.getResponseHeaders());
                 Log_OC.d(TAG, "Successful response: " + response);
 
                 // Parse the response
@@ -100,13 +100,13 @@ public class RegisterAccountDeviceForNotificationsOperation extends RemoteOperat
                 result.setPushResponseData(pushResponse);
             } else {
                 if (isInvalidSessionToken(response)) {
-                    result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.ACCOUNT_USES_STANDARD_PASSWORD);
+                    result = new RemoteOperationResult(RemoteOperationResult.ResultCode.ACCOUNT_USES_STANDARD_PASSWORD);
                 } else {
-                    result = new RemoteOperationResult<B>(false, status, post.getResponseHeaders());
+                    result = new RemoteOperationResult(false, status, post.getResponseHeaders());
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while registering device for notifications", e);
         } finally {
             if (post != null) {

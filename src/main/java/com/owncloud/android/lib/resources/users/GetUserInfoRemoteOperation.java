@@ -77,8 +77,8 @@ public class GetUserInfoRemoteOperation extends OCSRemoteOperation {
     public static final long QUOTA_LIMIT_INFO_NOT_AVAILABLE = Long.MIN_VALUE;
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         int status;
         GetMethod get = null;
 
@@ -107,13 +107,13 @@ public class GetUserInfoRemoteOperation extends OCSRemoteOperation {
                     userInfo.getQuota().setQuota(QUOTA_LIMIT_INFO_NOT_AVAILABLE);
                 }
 
-                result = new RemoteOperationResult<B>(true, get);
+                result = new RemoteOperationResult(true, get);
                 // Username in result.data
                 ArrayList<Object> data = new ArrayList<>();
                 data.add(userInfo);
                 result.setData(data);
             } else {
-                result = new RemoteOperationResult<B>(false, get);
+                result = new RemoteOperationResult(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting user information ");
                 if (response != null) {
@@ -123,7 +123,7 @@ public class GetUserInfoRemoteOperation extends OCSRemoteOperation {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while getting OC user information", e);
         } finally {
             if (get != null) {

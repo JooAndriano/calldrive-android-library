@@ -58,9 +58,9 @@ public class GetPrivateKeyOperation extends OCSRemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         GetMethod getMethod = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
 
         try {
             // remote request
@@ -72,17 +72,17 @@ public class GetPrivateKeyOperation extends OCSRemoteOperation {
             if (status == HttpStatus.SC_OK) {
                 ServerResponse<PrivateKey> serverResponse = getServerResponse(getMethod, new TypeToken<ServerResponse<PrivateKey>>(){});
 
-                result = new RemoteOperationResult<B>(true, getMethod);
+                result = new RemoteOperationResult(true, getMethod);
                 ArrayList<Object> keys = new ArrayList<>();
                 keys.add(serverResponse.getOcs().getData().getKey());
                 result.setData(keys);
             } else {
-                result = new RemoteOperationResult<B>(false, getMethod);
+                result = new RemoteOperationResult(false, getMethod);
                 client.exhaustResponse(getMethod.getResponseBodyAsStream());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Fetching of public key failed: " + result.getLogMessage(), result.getException());
         } finally {
             if (getMethod != null)

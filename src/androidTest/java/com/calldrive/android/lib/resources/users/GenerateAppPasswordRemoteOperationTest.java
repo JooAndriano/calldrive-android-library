@@ -46,7 +46,7 @@ public class GenerateAppPasswordRemoteOperationTest extends AbstractIT {
     @Test
     public void generateAppPassword() {
         GenerateAppPasswordRemoteOperation sut = new GenerateAppPasswordRemoteOperation();
-        RemoteOperationResult<B> result = sut.execute(client);
+        RemoteOperationResult result = sut.execute(client);
 
         assertTrue(result.isSuccess());
 

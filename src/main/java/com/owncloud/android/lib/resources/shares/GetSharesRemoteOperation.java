@@ -37,13 +37,13 @@ import org.apache.commons.httpclient.methods.GetMethod;
 /**
  * Get the data from the server about ALL the known shares owned by the requester.
  */
-public class GetSharesRemoteOperation extends RemoteOperation<B> {
+public class GetSharesRemoteOperation extends RemoteOperation {
 
     private static final String TAG = GetSharesRemoteOperation.class.getSimpleName();
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result = null;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result = null;
         int status = -1;
 
         // Get Method
@@ -65,11 +65,11 @@ public class GetSharesRemoteOperation extends RemoteOperation<B> {
                 parser.setServerBaseUri(client.getBaseUri());
                 result = parser.parse(response);
             } else {
-                result = new RemoteOperationResult<B>(false, get);
+                result = new RemoteOperationResult(false, get);
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while getting remote shares ", e);
 
         } finally {

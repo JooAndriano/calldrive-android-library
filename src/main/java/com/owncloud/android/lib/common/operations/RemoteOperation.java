@@ -395,7 +395,7 @@ public abstract class RemoteOperation implements Runnable {
             AccountUtils.saveClient(mClient, mAccount, mContext);
         }
         
-        final RemoteOperationResult<B> resultToSend = result;
+        final RemoteOperationResult resultToSend = result;
         if (mListenerHandler != null && mListener != null) {
         	mListenerHandler.post(new Runnable() {
                 @Override

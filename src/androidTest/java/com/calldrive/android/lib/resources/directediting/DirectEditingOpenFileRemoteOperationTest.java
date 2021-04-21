@@ -53,7 +53,7 @@ public class DirectEditingOpenFileRemoteOperationTest extends AbstractIT {
         TestCase.assertTrue(new ReadFileRemoteOperation(remotePath).execute(client).isSuccess());
 
         // open file
-        RemoteOperationResult<B> result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
+        RemoteOperationResult result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
         assertTrue(result.isSuccess());
 
         String url = (String) result.getSingleData();
@@ -72,7 +72,7 @@ public class DirectEditingOpenFileRemoteOperationTest extends AbstractIT {
         TestCase.assertTrue(new ReadFileRemoteOperation(remotePath).execute(client).isSuccess());
 
         // open file
-        RemoteOperationResult<B> result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
+        RemoteOperationResult result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
         assertTrue(result.isSuccess());
 
         String url = (String) result.getSingleData();
@@ -91,7 +91,7 @@ public class DirectEditingOpenFileRemoteOperationTest extends AbstractIT {
         TestCase.assertTrue(new ReadFileRemoteOperation(remotePath).execute(client).isSuccess());
 
         // open file
-        RemoteOperationResult<B> result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
+        RemoteOperationResult result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
         assertTrue(result.isSuccess());
 
         String url = (String) result.getSingleData();
@@ -106,7 +106,7 @@ public class DirectEditingOpenFileRemoteOperationTest extends AbstractIT {
         TestCase.assertFalse(new ReadFileRemoteOperation(remotePath).execute(client).isSuccess());
 
         // open file
-        RemoteOperationResult<B> result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
+        RemoteOperationResult result = new DirectEditingOpenFileRemoteOperation(remotePath, "text").execute(client);
         assertFalse(result.isSuccess());
     }
 }

@@ -49,7 +49,7 @@ import java.io.IOException;
  *
  * @author David A. Velasco
  */
-public class MoveFileRemoteOperation extends RemoteOperation<B> {
+public class MoveFileRemoteOperation extends RemoteOperation {
 
     private static final String TAG = MoveFileRemoteOperation.class.getSimpleName();
 
@@ -86,21 +86,21 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         // check parameters
         if (mTargetRemotePath.equals(mSrcRemotePath)) {
             // nothing to do!
-            return new RemoteOperationResult<B>(ResultCode.OK);
+            return new RemoteOperationResult(ResultCode.OK);
         }
 
         if (mTargetRemotePath.startsWith(mSrcRemotePath)) {
-            return new RemoteOperationResult<B>(ResultCode.INVALID_MOVE_INTO_DESCENDANT);
+            return new RemoteOperationResult(ResultCode.INVALID_MOVE_INTO_DESCENDANT);
         }
 
 
         /// perform remote operation
         MoveMethod move = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
         try {
             move = new MoveMethod(
                 client.getWebdavUri() + WebdavUtils.encodePath(mSrcRemotePath),
@@ -115,7 +115,7 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
 
             } else if (status == HttpStatus.SC_PRECONDITION_FAILED && !mOverwrite) {
 
-                result = new RemoteOperationResult<B>(ResultCode.INVALID_OVERWRITE);
+                result = new RemoteOperationResult(ResultCode.INVALID_OVERWRITE);
                 client.exhaustResponse(move.getResponseBodyAsStream());
 
 
@@ -123,7 +123,7 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
                 /// http://www.webdav.org/specs/rfc4918.html#rfc.section.9.9.4
 
             } else {
-                result = new RemoteOperationResult<B>(isSuccess(status), move);
+                result = new RemoteOperationResult(isSuccess(status), move);
                 client.exhaustResponse(move.getResponseBodyAsStream());
             }
 
@@ -131,7 +131,7 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
                 result.getLogMessage());
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log.e(TAG, "Move " + mSrcRemotePath + " to " + mTargetRemotePath + ": " +
                 result.getLogMessage(), e);
 
@@ -160,7 +160,7 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
      *                      the response XML document fails
      * @return A result for the {@link MoveFileRemoteOperation} caller
      */
-    private RemoteOperationResult<B> processPartialError(MoveMethod move)
+    private RemoteOperationResult processPartialError(MoveMethod move)
         throws IOException, DavException {
         // Adding a list of failed descendants to the result could be interesting; or maybe not.
         // For the moment, let's take the easy way.
@@ -178,11 +178,11 @@ public class MoveFileRemoteOperation extends RemoteOperation<B> {
             );
         }
 
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
         if (failFound) {
-            result = new RemoteOperationResult<B>(ResultCode.PARTIAL_MOVE_DONE);
+            result = new RemoteOperationResult(ResultCode.PARTIAL_MOVE_DONE);
         } else {
-            result = new RemoteOperationResult<B>(true, move);
+            result = new RemoteOperationResult(true, move);
         }
 
         return result;

@@ -40,7 +40,7 @@ import org.apache.commons.httpclient.methods.Utf8PostMethod;
  * Remote operation notifying server for successful wipe
  */
 
-public class RemoteWipeSuccessRemoteOperation extends RemoteOperation<B> {
+public class RemoteWipeSuccessRemoteOperation extends RemoteOperation {
 
     private static final String TAG = RemoteWipeSuccessRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -57,9 +57,9 @@ public class RemoteWipeSuccessRemoteOperation extends RemoteOperation<B> {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
 
         try {
             postMethod = new Utf8PostMethod(client.getBaseUri() + REMOTE_WIPE_URL);
@@ -70,13 +70,13 @@ public class RemoteWipeSuccessRemoteOperation extends RemoteOperation<B> {
             client.exhaustResponse(postMethod.getResponseBodyAsStream());
 
             if (HttpStatus.SC_OK == status) {
-                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.OK);
+                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.OK);
             } else {
-                result = new RemoteOperationResult<B>(
+                result = new RemoteOperationResult(
                         RemoteOperationResult.ResultCode.valueOf(String.valueOf(status)));
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG,
                      "Setting status of remote wipe status failed: " + result.getLogMessage(),
                      result.getException());

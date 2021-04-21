@@ -46,8 +46,8 @@ public class DirectEditingObtainRemoteOperation extends OCSRemoteOperation {
 
     private static final String JSON_FORMAT = "?format=json";
 
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         GetMethod getMethod = null;
 
         try {
@@ -64,14 +64,14 @@ public class DirectEditingObtainRemoteOperation extends OCSRemoteOperation {
                         })
                         .getOcs().getData();
 
-                result = new RemoteOperationResult<B>(true, getMethod);
+                result = new RemoteOperationResult(true, getMethod);
                 result.setSingleData(directEditing);
             } else {
-                result = new RemoteOperationResult<B>(false, getMethod);
+                result = new RemoteOperationResult(false, getMethod);
                 client.exhaustResponse(getMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Get all direct editing informations failed: " + result.getLogMessage(),
                     result.getException());
         } finally {

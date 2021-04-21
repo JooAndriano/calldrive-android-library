@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * Remote operation performing check if app token is scheduled for remote wipe
  */
 
-public class CheckRemoteWipeRemoteOperation extends RemoteOperation<B> {
+public class CheckRemoteWipeRemoteOperation extends RemoteOperation {
 
     private static final String TAG = CheckRemoteWipeRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -56,9 +56,9 @@ public class CheckRemoteWipeRemoteOperation extends RemoteOperation<B> {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
 
         try {
             postMethod = new Utf8PostMethod(client.getBaseUri() + REMOTE_WIPE_URL + JSON_FORMAT);
@@ -73,17 +73,17 @@ public class CheckRemoteWipeRemoteOperation extends RemoteOperation<B> {
                 JSONObject json = new JSONObject(response);
 
                 if (json.getBoolean(WIPE)) {
-                    result = new RemoteOperationResult<B>(true, postMethod);
+                    result = new RemoteOperationResult(true, postMethod);
                 } else {
-                    result = new RemoteOperationResult<B>(false, postMethod);
+                    result = new RemoteOperationResult(false, postMethod);
                 }
             } else {
-                result = new RemoteOperationResult<B>(false, postMethod);
+                result = new RemoteOperationResult(false, postMethod);
             }
 
             client.exhaustResponse(postMethod.getResponseBodyAsStream());
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG,
                      "Getting remote wipe status failed: " + result.getLogMessage(),
                      result.getException());

@@ -40,7 +40,7 @@ public class DirectEditingObtainRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testGetAll() {
-        RemoteOperationResult<B> result = new DirectEditingObtainRemoteOperation().execute(client);
+        RemoteOperationResult result = new DirectEditingObtainRemoteOperation().execute(client);
         assertTrue(result.isSuccess());
 
         DirectEditing directEditing = (DirectEditing) result.getSingleData();

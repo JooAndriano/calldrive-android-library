@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 public class DirectEditingCreateFileRemoteOperationTest extends AbstractIT {
     @Test
     public void createEmptyFile() {
-        RemoteOperationResult<B> result = new DirectEditingCreateFileRemoteOperation("/test.md",
+        RemoteOperationResult result = new DirectEditingCreateFileRemoteOperation("/test.md",
                                                                                   "text",
                 "textdocument")
                 .execute(client);
@@ -51,7 +51,7 @@ public class DirectEditingCreateFileRemoteOperationTest extends AbstractIT {
 
     @Test
     public void createFileFromTemplate() {
-        RemoteOperationResult<B> result = new DirectEditingCreateFileRemoteOperation("/test.md",
+        RemoteOperationResult result = new DirectEditingCreateFileRemoteOperation("/test.md",
                 "text",
                 "textdocument",
                 "1")
@@ -65,7 +65,7 @@ public class DirectEditingCreateFileRemoteOperationTest extends AbstractIT {
 
     @Test
     public void createFileWithSpecialCharacterFromTemplate() {
-        RemoteOperationResult<B> result = new DirectEditingCreateFileRemoteOperation("/あ.md",
+        RemoteOperationResult result = new DirectEditingCreateFileRemoteOperation("/あ.md",
                 "text",
                 "textdocument",
                 "1")

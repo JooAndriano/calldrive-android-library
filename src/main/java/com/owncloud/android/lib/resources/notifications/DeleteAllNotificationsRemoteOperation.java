@@ -39,15 +39,15 @@ import org.apache.jackrabbit.webdav.client.methods.DeleteMethod;
  * Delete all notification, specified at 
  * {@link "https://github.com/calldrive/notifications/blob/master/docs/ocs-endpoint-v2.md"}.
  */
-public class DeleteAllNotificationsRemoteOperation extends RemoteOperation<B> {
+public class DeleteAllNotificationsRemoteOperation extends RemoteOperation {
 
     // OCS Route
     private static final String OCS_ROUTE_LIST_V12_AND_UP =
             "/ocs/v2.php/apps/notifications/api/v2/notifications";
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         int status;
         DeleteMethod delete = null;
         String url = client.getBaseUri() + OCS_ROUTE_LIST_V12_AND_UP;
@@ -60,10 +60,10 @@ public class DeleteAllNotificationsRemoteOperation extends RemoteOperation<B> {
             String response = delete.getResponseBodyAsString();
 
             if (isSuccess(status)) {
-                result = new RemoteOperationResult<B>(true, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult(true, status, delete.getResponseHeaders());
                 Log_OC.d(this, "Successful response: " + response);
             } else {
-                result = new RemoteOperationResult<B>(false, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult(false, status, delete.getResponseHeaders());
                 Log_OC.e(this, "Failed response while getting user notifications ");
                 if (response != null) {
                     Log_OC.e(this, "*** status code: " + status + " ;response message: " + response);
@@ -72,7 +72,7 @@ public class DeleteAllNotificationsRemoteOperation extends RemoteOperation<B> {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(this, "Exception while getting remote notifications", e);
         } finally {
             if (delete != null) {

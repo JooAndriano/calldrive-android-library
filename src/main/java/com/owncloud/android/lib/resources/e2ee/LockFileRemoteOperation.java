@@ -42,7 +42,7 @@ import java.util.ArrayList;
 /**
  * Lock a file
  */
-public class LockFileRemoteOperation extends RemoteOperation<B> {
+public class LockFileRemoteOperation extends RemoteOperation {
 
     private static final String TAG = LockFileRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -75,8 +75,8 @@ public class LockFileRemoteOperation extends RemoteOperation<B> {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         Utf8PostMethod postMethod = null;
 
         try {
@@ -102,16 +102,16 @@ public class LockFileRemoteOperation extends RemoteOperation<B> {
                         .getJSONObject(NODE_DATA)
                         .get(E2E_TOKEN);
 
-                result = new RemoteOperationResult<B>(true, postMethod);
+                result = new RemoteOperationResult(true, postMethod);
                 ArrayList<Object> tokenArray = new ArrayList<>();
                 tokenArray.add(token);
                 result.setData(tokenArray);
             } else {
-                result = new RemoteOperationResult<B>(false, postMethod);
+                result = new RemoteOperationResult(false, postMethod);
                 client.exhaustResponse(postMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Lock file with id " + localId + " failed: " + result.getLogMessage(), result.getException());
         } finally {
             if (postMethod != null)

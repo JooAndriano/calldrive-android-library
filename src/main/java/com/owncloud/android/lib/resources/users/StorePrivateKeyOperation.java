@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Remote operation performing the storage of the private key for an user
  */
 
-public class StorePrivateKeyOperation extends RemoteOperation<B> {
+public class StorePrivateKeyOperation extends RemoteOperation {
 
     private static final String TAG = StorePrivateKeyOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -71,9 +71,9 @@ public class StorePrivateKeyOperation extends RemoteOperation<B> {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
 
         try {
             // remote request
@@ -90,17 +90,17 @@ public class StorePrivateKeyOperation extends RemoteOperation<B> {
                 JSONObject respJSON = new JSONObject(response);
                 String key = (String) respJSON.getJSONObject(NODE_OCS).getJSONObject(NODE_DATA).get(NODE_PRIVATE_KEY);
 
-                result = new RemoteOperationResult<B>(true, postMethod);
+                result = new RemoteOperationResult(true, postMethod);
                 ArrayList<Object> keys = new ArrayList<>();
                 keys.add(key);
                 result.setData(keys);
             } else {
-                result = new RemoteOperationResult<B>(false, postMethod);
+                result = new RemoteOperationResult(false, postMethod);
                 client.exhaustResponse(postMethod.getResponseBodyAsStream());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Storing private key failed: " + result.getLogMessage(), result.getException());
         } finally {
             if (postMethod != null)

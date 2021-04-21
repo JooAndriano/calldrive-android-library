@@ -57,7 +57,7 @@ public class RemoveShareTest extends AbstractIT {
                                                  String.valueOf(System.currentTimeMillis() / 1000))
                            .execute(client).isSuccess());
 
-        RemoteOperationResult<B> result = new CreateShareRemoteOperation(FILE_TO_UNSHARE,
+        RemoteOperationResult result = new CreateShareRemoteOperation(FILE_TO_UNSHARE,
                                                                       ShareType.PUBLIC_LINK,
                                                                       "",
                                                                       false,

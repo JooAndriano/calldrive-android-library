@@ -178,7 +178,7 @@ public class CopyFileIT extends AbstractIT {
     public void createFixtures() throws Exception {
         Log.v(LOG_TAG, "Setting up the remote fixture...");
 
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
         for (String folderPath : FOLDERS_IN_FIXTURE) {
             result = new CreateFolderRemoteOperation(folderPath, true).execute(client);
 
@@ -201,7 +201,7 @@ public class CopyFileIT extends AbstractIT {
         String[] folders = new String[]{SRC_BASE_FOLDER, TARGET_BASE_FOLDER};
 
         for (String folder : folders) {
-            RemoteOperationResult<B> result = new RemoveFileRemoteOperation(folder).execute(client);
+            RemoteOperationResult result = new RemoveFileRemoteOperation(folder).execute(client);
 
             assertTrue("Error removing folder " + folder + ": " + result, result.isSuccess());
         }
@@ -218,7 +218,7 @@ public class CopyFileIT extends AbstractIT {
 
         // copy file
         CopyFileRemoteOperation copyOperation = new CopyFileRemoteOperation(SRC_PATH_TO_FILE_1, TARGET_PATH_TO_FILE_1, false);
-        RemoteOperationResult<B> result = copyOperation.execute(client);
+        RemoteOperationResult result = copyOperation.execute(client);
         assertTrue("copy file: " + result, result.isSuccess());
 
         // copy & rename file, different location
