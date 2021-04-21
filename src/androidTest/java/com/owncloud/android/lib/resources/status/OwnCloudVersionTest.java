@@ -1,28 +1,97 @@
+/* Calldrive Android Library is available under MIT license
+ *
+ *   @author Tobias Kaminsky
+ *   Copyright (C) 2018 Tobias Kaminsky
+ *   Copyright (C) 2018 Calldrive GmbH
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to deal
+ *   in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in
+ *   all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *   THE SOFTWARE.
+ *
+ */
+
 package com.owncloud.android.lib.resources.status;
 
-import android.os.Parcel;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(AndroidJUnit4.class)
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class OwnCloudVersionTest {
+    @Test
+    public void testOwnCloudVersion() {
+        OwnCloudVersion version = new OwnCloudVersion("17.0.0");
+
+        assertEquals(0, version.compareTo(OwnCloudVersion.calldrive_17));
+
+        version = new OwnCloudVersion("17.99.99");
+
+        assertEquals(0, version.compareTo(new OwnCloudVersion(0x11636300))); // 13.99.99 in hex
+    }
 
     @Test
-    public void parcelableIsImplemented() {
-        OwnCloudVersion original = new OwnCloudVersion(42);
+    public void testGetMajorVersion() {
+        OwnCloudVersion version = new OwnCloudVersion("12.0.0");
+        assertEquals(12, version.getMajorVersionNumber());
 
-        Parcel parcel = Parcel.obtain();
-        parcel.setDataPosition(0);
-        parcel.writeParcelable(original, 0);
+        version = new OwnCloudVersion("19.0.0");
+        assertEquals(19, version.getMajorVersionNumber());
+    }
 
-        parcel.setDataPosition(0);
-        OwnCloudVersion retrieved = parcel.readParcelable(OwnCloudVersion.class.getClassLoader());
+    @Test
+    public void testSamMajorVersion() {
+        OwnCloudVersion version = new OwnCloudVersion("12.0.0");
 
-        Assert.assertNotSame(original, retrieved);
-        Assert.assertEquals(original, retrieved);
+        assertTrue(version.isSameMajorVersion(new OwnCloudVersion("12.99.99")));
+        assertFalse(version.isSameMajorVersion(new OwnCloudVersion("13.0.0")));
+    }
+
+    @Test
+    public void testOwnCloudVersionFailure() {
+        OwnCloudVersion version = new OwnCloudVersion("");
+
+        assertFalse(version.isVersionValid());
+    }
+
+    @Test
+    public void testSupportNC16() {
+        assertFalse(OwnCloudVersion.calldrive_16.isShareesOnDavSupported());
+    }
+
+    @Test
+    public void testSupportNC17() {
+        assertTrue(OwnCloudVersion.calldrive_17.isShareesOnDavSupported());
+    }
+
+    @Test
+    public void testSupportNC18() {
+        assertTrue(OwnCloudVersion.calldrive_18.isShareesOnDavSupported());
+    }
+
+    @Test
+    public void testSupportNC21() {
+        OwnCloudVersion version = new OwnCloudVersion("21.0.0");
+
+        assertEquals(0, version.compareTo(CalldriveVersion.calldrive_21));
+
+        version = new CalldriveVersion("21.99.99");
+
+        assertEquals(0, version.compareTo(new OwnCloudVersion(0x15636300))); // 21.99.99 in hex
     }
 }

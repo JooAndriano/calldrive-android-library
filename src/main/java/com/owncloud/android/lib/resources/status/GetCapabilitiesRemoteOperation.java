@@ -49,7 +49,7 @@ import java.util.ArrayList;
  *
  * Save in Result.getData in a OCCapability object
  */
-public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
+public class GetCapabilitiesRemoteOperation extends RemoteOperation {
 
     private static final String TAG = GetCapabilitiesRemoteOperation.class.getSimpleName();
 
@@ -137,7 +137,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
 
     // v1 client side encryption
     private static final String NODE_END_TO_END_ENCRYPTION = "end-to-end-encryption";
-    
+
     // Richdocuments
     private static final String NODE_RICHDOCUMENTS = "richdocuments";
     private static final String NODE_MIMETYPES = "mimetypes";
@@ -148,9 +148,15 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
 
     // DirectEditing
     private static final String NODE_DIRECT_EDITING = "directEditing";
-        
+
     // activity
     private static final String NODE_ACTIVITY = "activity";
+
+    // user status
+    private static final String NODE_USER_STATUS = "user_status";
+    private static final String NODE_USER_STATUS_ENABLED = "enabled";
+    private static final String NODE_USER_STATUS_SUPPORTS_EMOJI = "supports_emoji";
+
 
     private OCCapability currentCapability = null;
 
@@ -162,8 +168,8 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
     }
 
     @Override
-    public RemoteOperationResult<B> run(CalldriveClient client) {
-        RemoteOperationResult<B> result;
+    public RemoteOperationResult run(CalldriveClient client) {
+        RemoteOperationResult result;
         int status;
         GetMethod get = null;
 
@@ -185,7 +191,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
             if (isNotModified(status)) {
                 Log_OC.d(TAG, "Capabilities not modified");
 
-                result = new RemoteOperationResult<B>(true, get);
+                result = new RemoteOperationResult(true, get);
                 result.setSingleData(currentCapability);
 
                 Log_OC.d(TAG, "*** Get Capabilities completed ");
@@ -201,10 +207,10 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                 }
 
                 // Result
-                result = new RemoteOperationResult<B>(true, get);
+                result = new RemoteOperationResult(true, get);
                 result.setSingleData(capability);
             } else {
-                result = new RemoteOperationResult<B>(false, get);
+                result = new RemoteOperationResult(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting capabilities from the server ");
                 if (response != null) {
@@ -214,7 +220,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while getting capabilities", e);
 
         } finally {
@@ -226,8 +232,8 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
     }
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         int status;
         org.apache.commons.httpclient.methods.GetMethod get = null;
 
@@ -250,7 +256,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
             if (isNotModified(status)) {
                 Log_OC.d(TAG, "Capabilities not modified");
 
-                result = new RemoteOperationResult<B>(true, get);
+                result = new RemoteOperationResult(true, get);
                 result.setSingleData(currentCapability);
 
                 Log_OC.d(TAG, "*** Get Capabilities completed ");
@@ -266,10 +272,10 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                 }
 
                 // Result
-                result = new RemoteOperationResult<B>(true, get);
+                result = new RemoteOperationResult(true, get);
                 result.setSingleData(capability);
             } else {
-                result = new RemoteOperationResult<B>(false, get);
+                result = new RemoteOperationResult(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting capabilities from the server ");
                 if (response != null) {
@@ -279,7 +285,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                 }
             }
         } catch (JSONException | IOException e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while getting capabilities", e);
 
         } finally {
@@ -358,7 +364,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                                 capability.setFilesSharingPublicAskForOptionalPassword(
                                         CapabilityBooleanType.fromBooleanValue(
                                                 passwordJson.getBoolean(NODE_ASK_FOR_OPTIONAL_PASSWORD))
-                                                                                      );
+                                );
                             } else {
                                 capability.setFilesSharingPublicAskForOptionalPassword(
                                         CapabilityBooleanType.FALSE);
@@ -607,6 +613,26 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
                     }
                 } else {
                     capability.setRichDocuments(CapabilityBooleanType.FALSE);
+                }
+
+                // user status
+                if (respCapabilities.has(NODE_USER_STATUS)) {
+                    JSONObject userStatusCapability = respCapabilities.getJSONObject(NODE_USER_STATUS);
+
+                    if (userStatusCapability.getBoolean(NODE_USER_STATUS_ENABLED)) {
+                        capability.setUserStatus(CapabilityBooleanType.TRUE);
+                    } else {
+                        capability.setUserStatus(CapabilityBooleanType.FALSE);
+                    }
+
+                    if (userStatusCapability.getBoolean(NODE_USER_STATUS_SUPPORTS_EMOJI)) {
+                        capability.setUserStatusSupportsEmoji(CapabilityBooleanType.TRUE);
+                    } else {
+                        capability.setUserStatusSupportsEmoji(CapabilityBooleanType.FALSE);
+                    }
+                } else {
+                    capability.setUserStatus(CapabilityBooleanType.FALSE);
+                    capability.setUserStatusSupportsEmoji(CapabilityBooleanType.FALSE);
                 }
             }
 
