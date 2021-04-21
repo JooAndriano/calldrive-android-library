@@ -39,7 +39,7 @@ import org.apache.jackrabbit.webdav.client.methods.DeleteMethod;
  * @author David A. Velasco
  * @author masensio
  */
-public class RemoveFileRemoteOperation extends RemoteOperation<B> {
+public class RemoveFileRemoteOperation extends RemoteOperation {
     private static final String TAG = RemoveFileRemoteOperation.class.getSimpleName();
 
     private static final int REMOVE_READ_TIMEOUT = 30000;
@@ -62,8 +62,8 @@ public class RemoveFileRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result = null;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result = null;
         DeleteMethod delete = null;
 
         try {
@@ -71,14 +71,14 @@ public class RemoveFileRemoteOperation extends RemoteOperation<B> {
             int status = client.executeMethod(delete, REMOVE_READ_TIMEOUT, REMOVE_CONNECTION_TIMEOUT);
 
             delete.getResponseBodyAsString();   // exhaust the response, although not interesting
-            result = new RemoteOperationResult<B>(
+            result = new RemoteOperationResult(
                 (delete.succeeded() || status == HttpStatus.SC_NOT_FOUND),
                 delete
             );
             Log_OC.i(TAG, "Remove " + mRemotePath + ": " + result.getLogMessage());
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Remove " + mRemotePath + ": " + result.getLogMessage(), e);
 
         } finally {

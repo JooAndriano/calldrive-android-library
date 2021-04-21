@@ -44,7 +44,7 @@ import java.io.IOException;
 /**
  * Restore a {@link FileVersion}.
  */
-public class RestoreFileVersionRemoteOperation extends RemoteOperation<B> {
+public class RestoreFileVersionRemoteOperation extends RemoteOperation {
 
     private static final String TAG = RestoreFileVersionRemoteOperation.class.getSimpleName();
     private static final int RESTORE_READ_TIMEOUT = 30000;
@@ -70,10 +70,10 @@ public class RestoreFileVersionRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
 
         MoveMethod move = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
         try {
             String source = client.getNewWebdavUri() + "/versions/" + client.getUserId() + "/versions/" + fileId + "/"
                     + Uri.encode(fileName);
@@ -82,11 +82,11 @@ public class RestoreFileVersionRemoteOperation extends RemoteOperation<B> {
             move = new MoveMethod(source, target, true);
             int status = client.executeMethod(move, RESTORE_READ_TIMEOUT, RESTORE_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult<B>(isSuccess(status), move);
+            result = new RemoteOperationResult(isSuccess(status), move);
 
             client.exhaustResponse(move.getResponseBodyAsStream());
         } catch (IOException e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log.e(TAG, "Restore file version with id " + fileId + " failed: " + result.getLogMessage(), e);
         } finally {
             if (move != null) {

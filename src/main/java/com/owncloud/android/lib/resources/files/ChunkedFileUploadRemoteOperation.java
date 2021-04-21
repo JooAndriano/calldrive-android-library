@@ -81,8 +81,8 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
     }
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         DefaultHttpMethodRetryHandler oldRetryHandler = (DefaultHttpMethodRetryHandler) 
                 client.getParams().getParameter(HttpMethodParams.RETRY_HANDLER);
         File file = new File(localPath);
@@ -107,7 +107,7 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
             client.executeMethod(listChunks);
             
             if (!listChunks.succeeded()) {
-                return new RemoteOperationResult<B>(listChunks.succeeded(), listChunks);
+                return new RemoteOperationResult(listChunks.succeeded(), listChunks);
             }
             
             List<Chunk> chunksOnServer = new ArrayList<>();
@@ -137,14 +137,14 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
 
             // upload chunks
             for (Chunk missingChunk : missingChunks) {
-                RemoteOperationResult<B> chunkResult = uploadChunk(client, uploadFolderUri, missingChunk);
+                RemoteOperationResult chunkResult = uploadChunk(client, uploadFolderUri, missingChunk);
                 
                 if (!chunkResult.isSuccess()) {
                     return chunkResult;
                 }
 
                 if (cancellationRequested.get()) {
-                    return new RemoteOperationResult<B>(new OperationCancelledException());
+                    return new RemoteOperationResult(new OperationCancelledException());
                 }
             }
 
@@ -160,16 +160,16 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
             }
             int moveResult = client.executeMethod(moveMethod);
 
-            result = new RemoteOperationResult<B>(isSuccess(moveResult), moveMethod);
+            result = new RemoteOperationResult(isSuccess(moveResult), moveMethod);
         } catch (Exception e) {
             if (putMethod != null && putMethod.isAborted()) {
                 if (cancellationRequested.get() && cancellationReason != null) {
-                    result = new RemoteOperationResult<B>(cancellationReason);
+                    result = new RemoteOperationResult(cancellationReason);
                 } else {
-                    result = new RemoteOperationResult<B>(new OperationCancelledException());
+                    result = new RemoteOperationResult(new OperationCancelledException());
                 }
             } else {
-                result = new RemoteOperationResult<B>(e);
+                result = new RemoteOperationResult(e);
             }
         } finally {
             // reset previous retry handler
@@ -220,10 +220,10 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
         return null;
     }
 
-    private RemoteOperationResult<B> uploadChunk(OwnCloudClient client, String uploadFolderUri, Chunk chunk)
+    private RemoteOperationResult uploadChunk(OwnCloudClient client, String uploadFolderUri, Chunk chunk)
             throws IOException {
         int status;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
 
         String startString = String.format(Locale.ROOT, "%016d", chunk.start);
         String endString = String.format(Locale.ROOT, "%016d", chunk.end);
@@ -256,7 +256,7 @@ public class ChunkedFileUploadRemoteOperation extends UploadFileRemoteOperation 
 
             status = client.executeMethod(putMethod);
 
-            result = new RemoteOperationResult<B>(isSuccess(status), putMethod);
+            result = new RemoteOperationResult(isSuccess(status), putMethod);
 
             client.exhaustResponse(putMethod.getResponseBodyAsStream());
             Log_OC.d(TAG, "Upload of " + localPath + " to " + remotePath + ", chunk from " + startString + " to " +

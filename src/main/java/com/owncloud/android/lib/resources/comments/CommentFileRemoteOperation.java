@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * Comment file
  */
-public class CommentFileRemoteOperation extends RemoteOperation<B> {
+public class CommentFileRemoteOperation extends RemoteOperation {
 
     private static final String TAG = CommentFileRemoteOperation.class.getSimpleName();
     private static final int POST_READ_TIMEOUT = 30000;
@@ -77,10 +77,10 @@ public class CommentFileRemoteOperation extends RemoteOperation<B> {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+    protected RemoteOperationResult run(OwnCloudClient client) {
 
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult<B> result;
+        RemoteOperationResult result;
         try {
             String url = client.getNewWebdavUri() + "/comments/files/" + fileId;
             postMethod = new Utf8PostMethod(url);
@@ -98,11 +98,11 @@ public class CommentFileRemoteOperation extends RemoteOperation<B> {
 
             int status = client.executeMethod(postMethod, POST_READ_TIMEOUT, POST_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult<B>(isSuccess(status), postMethod);
+            result = new RemoteOperationResult(isSuccess(status), postMethod);
 
             client.exhaustResponse(postMethod.getResponseBodyAsStream());
         } catch (IOException e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log.e(TAG, "Post comment to file with id " + fileId + " failed: " + result.getLogMessage(), e);
         } finally {
             if (postMethod != null) {

@@ -40,7 +40,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * The input is the full path of the desired file.
  * The output is a list of everyone who has the file shared with them.
  */
-public class GetSharesForFileRemoteOperation extends RemoteOperation<B> {
+public class GetSharesForFileRemoteOperation extends RemoteOperation {
 
     private static final String TAG = GetSharesForFileRemoteOperation.class.getSimpleName();
 
@@ -70,8 +70,8 @@ public class GetSharesForFileRemoteOperation extends RemoteOperation<B> {
     }
 
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result = null;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result = null;
         int status = -1;
 
         GetMethod get = null;
@@ -107,11 +107,11 @@ public class GetSharesForFileRemoteOperation extends RemoteOperation<B> {
                 }
 
             } else {
-                result = new RemoteOperationResult<B>(false, get);
+                result = new RemoteOperationResult(false, get);
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while getting shares", e);
 
         } finally {

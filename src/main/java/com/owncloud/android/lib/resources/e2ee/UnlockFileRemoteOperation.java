@@ -38,7 +38,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 /**
  * Unlock a file
  */
-public class UnlockFileRemoteOperation extends RemoteOperation<B> {
+public class UnlockFileRemoteOperation extends RemoteOperation {
 
     private static final String TAG = UnlockFileRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -60,8 +60,8 @@ public class UnlockFileRemoteOperation extends RemoteOperation<B> {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult<B> run(OwnCloudClient client) {
-        RemoteOperationResult<B> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         DeleteMethod deleteMethod = null;
 
         try {
@@ -73,11 +73,11 @@ public class UnlockFileRemoteOperation extends RemoteOperation<B> {
 
             int status = client.executeMethod(deleteMethod, SYNC_READ_TIMEOUT, SYNC_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult<B>(status == HttpStatus.SC_OK, deleteMethod);
+            result = new RemoteOperationResult(status == HttpStatus.SC_OK, deleteMethod);
             
             client.exhaustResponse(deleteMethod.getResponseBodyAsStream());
         } catch (Exception e) {
-            result = new RemoteOperationResult<B>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Unlock file with id " + localId + " failed: " + result.getLogMessage(),
                     result.getException());
         } finally {

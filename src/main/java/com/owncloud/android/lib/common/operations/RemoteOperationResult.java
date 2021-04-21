@@ -75,7 +75,7 @@ import okhttp3.Headers;
  * @author David A. Velasco
  */
 @ToString
-public class RemoteOperationResult<B> implements Serializable {
+public class RemoteOperationResult implements Serializable {
 
     // Generated - should be refreshed every time the class changes!!
     private static final long serialVersionUID = -1909603208238358633L;
