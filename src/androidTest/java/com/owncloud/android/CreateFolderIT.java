@@ -70,7 +70,7 @@ public class CreateFolderIT extends AbstractIT {
     public void testCreateFolder() {
         String remotePath = mFullPath2FolderBase;
         mCreatedFolderPaths.add(remotePath);
-        RemoteOperationResult result = new CreateFolderRemoteOperation(remotePath, true).execute(client);
+        RemoteOperationResult<B> result = new CreateFolderRemoteOperation(remotePath, true).execute(client);
         assertTrue(result.isSuccess());
 
         // Create Subfolder
@@ -87,7 +87,7 @@ public class CreateFolderIT extends AbstractIT {
     @Test
     public void testCreateFolderSpecialCharactersOnNewVersion() {
         String remotePath = mFullPath2FolderBase + "_<";
-        RemoteOperationResult result = new CreateFolderRemoteOperation(remotePath, true).execute(client);
+        RemoteOperationResult<B> result = new CreateFolderRemoteOperation(remotePath, true).execute(client);
         assertTrue("Remote path: " + remotePath, result.isSuccess());
 
         remotePath = mFullPath2FolderBase + "_>";
@@ -119,12 +119,12 @@ public class CreateFolderIT extends AbstractIT {
     @After
     public void tearDown() {
         Iterator<String> it = mCreatedFolderPaths.iterator();
-        RemoteOperationResult removeResult;
+        RemoteOperationResult<B> removeResult;
         while (it.hasNext()) {
             String path = it.next();
 
             ExistenceCheckRemoteOperation existenceCheckOperation = new ExistenceCheckRemoteOperation(path, false);
-            RemoteOperationResult result = existenceCheckOperation.execute(client);
+            RemoteOperationResult<B> result = existenceCheckOperation.execute(client);
 
             if (result.isSuccess()) {
                 removeResult = new RemoveFileRemoteOperation(path).execute(client);

@@ -56,8 +56,8 @@ public class DirectEditingObtainListOfTemplatesRemoteOperation extends OCSRemote
     private String editor;
     private String template;
 
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         GetMethod getMethod = null;
 
         try {
@@ -74,14 +74,14 @@ public class DirectEditingObtainListOfTemplatesRemoteOperation extends OCSRemote
                                                               })
                         .getOcs().getData();
 
-                result = new RemoteOperationResult(true, getMethod);
+                result = new RemoteOperationResult<B>(true, getMethod);
                 result.setSingleData(templateList);
             } else {
-                result = new RemoteOperationResult(false, getMethod);
+                result = new RemoteOperationResult<B>(false, getMethod);
                 client.exhaustResponse(getMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Get all direct editing informations failed: " + result.getLogMessage(),
                      result.getException());
         } finally {

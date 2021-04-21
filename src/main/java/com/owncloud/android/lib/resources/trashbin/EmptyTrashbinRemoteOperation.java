@@ -42,7 +42,7 @@ import java.io.IOException;
 /**
  * Empty trashbin.
  */
-public class EmptyTrashbinRemoteOperation extends RemoteOperation {
+public class EmptyTrashbinRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = EmptyTrashbinRemoteOperation.class.getSimpleName();
     private static final int RESTORE_READ_TIMEOUT = 30000;
@@ -54,19 +54,19 @@ public class EmptyTrashbinRemoteOperation extends RemoteOperation {
      * @param client Client object to communicate with the remote Calldrive server.
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
 
         DeleteMethod delete = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
         try {
             delete = new DeleteMethod(client.getNewWebdavUri() + "/trashbin/" + client.getUserId() + "/trash");
             int status = client.executeMethod(delete, RESTORE_READ_TIMEOUT, RESTORE_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult(isSuccess(status), delete);
+            result = new RemoteOperationResult<B>(isSuccess(status), delete);
 
             client.exhaustResponse(delete.getResponseBodyAsStream());
         } catch (IOException e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log.e(TAG, "Empty trashbin failed: " + result.getLogMessage(), e);
         } finally {
             if (delete != null) {

@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Remote operation performing the fetch of the public key for an user
  */
 
-public class GetPublicKeyOperation extends RemoteOperation {
+public class GetPublicKeyOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetPublicKeyOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -61,9 +61,9 @@ public class GetPublicKeyOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         GetMethod getMethod = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
 
         try {
             // remote request
@@ -80,16 +80,16 @@ public class GetPublicKeyOperation extends RemoteOperation {
                 String key = (String) respJSON.getJSONObject(NODE_OCS).getJSONObject(NODE_DATA)
                         .getJSONObject(NODE_PUBLIC_KEYS).get(client.getUserId());
 
-                result = new RemoteOperationResult(true, getMethod);
+                result = new RemoteOperationResult<B>(true, getMethod);
                 ArrayList<Object> keys = new ArrayList<>();
                 keys.add(key);
                 result.setData(keys);
             } else {
-                result = new RemoteOperationResult(false, getMethod);
+                result = new RemoteOperationResult<B>(false, getMethod);
                 client.exhaustResponse(getMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Fetching of public key failed: " + result.getLogMessage(), result.getException());
         } finally {
             if (getMethod != null)

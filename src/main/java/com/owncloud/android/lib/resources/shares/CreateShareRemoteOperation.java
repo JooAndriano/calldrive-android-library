@@ -37,7 +37,7 @@ import org.apache.commons.httpclient.methods.Utf8PostMethod;
 /**
  * Creates a new share.  This allows sharing with a user or group or as a link.
  */
-public class CreateShareRemoteOperation extends RemoteOperation {
+public class CreateShareRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = CreateShareRemoteOperation.class.getSimpleName();
 
@@ -102,8 +102,8 @@ public class CreateShareRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         int status;
 
         Utf8PostMethod post = null;
@@ -149,11 +149,11 @@ public class CreateShareRemoteOperation extends RemoteOperation {
                 }
 
             } else {
-                result = new RemoteOperationResult(false, post);
+                result = new RemoteOperationResult<B>(false, post);
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while Creating New Share", e);
 
         } finally {

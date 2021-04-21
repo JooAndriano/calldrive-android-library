@@ -62,7 +62,7 @@ import java.util.ArrayList;
  * Status codes:
  *    100 - successful
  */
-public class GetShareesRemoteOperation extends RemoteOperation {
+public class GetShareesRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetShareesRemoteOperation.class.getSimpleName();
 
@@ -114,8 +114,8 @@ public class GetShareesRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         int status;
         GetMethod get = null;
 
@@ -206,13 +206,13 @@ public class GetShareesRemoteOperation extends RemoteOperation {
                 }
 
                 // Result
-                result = new RemoteOperationResult(true, get);
+                result = new RemoteOperationResult<B>(true, get);
                 result.setData(data);
 
                 Log_OC.d(TAG, "*** Get Users or groups completed");
 
             } else {
-                result = new RemoteOperationResult(false, get);
+                result = new RemoteOperationResult<B>(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting users/groups from the server");
 
@@ -224,7 +224,7 @@ public class GetShareesRemoteOperation extends RemoteOperation {
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting users/groups", e);
 
         } finally {

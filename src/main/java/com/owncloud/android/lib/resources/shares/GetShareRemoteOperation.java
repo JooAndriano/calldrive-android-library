@@ -37,7 +37,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * Get the data about a Share resource, known its remote ID.
  */
 
-public class GetShareRemoteOperation extends RemoteOperation {
+public class GetShareRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetShareRemoteOperation.class.getSimpleName();
 
@@ -50,8 +50,8 @@ public class GetShareRemoteOperation extends RemoteOperation {
 
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         int status = -1;
 
         // Get Method
@@ -76,11 +76,11 @@ public class GetShareRemoteOperation extends RemoteOperation {
                 result = parser.parse(response);
 
             } else {
-                result = new RemoteOperationResult(false, get);
+                result = new RemoteOperationResult<B>(false, get);
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting remote shares ", e);
 
         } finally {

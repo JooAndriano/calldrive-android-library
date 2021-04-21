@@ -45,7 +45,7 @@ import java.io.IOException;
 /**
  * Restore a {@link TrashbinFile}.
  */
-public class RestoreTrashbinFileRemoteOperation extends RemoteOperation {
+public class RestoreTrashbinFileRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = RestoreTrashbinFileRemoteOperation.class.getSimpleName();
     private static final int RESTORE_READ_TIMEOUT = 30000;
@@ -71,10 +71,10 @@ public class RestoreTrashbinFileRemoteOperation extends RemoteOperation {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
 
         MoveMethod move = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
         try {
             String source = client.getNewWebdavUri() + WebdavUtils.encodePath(sourcePath);
             String target = client.getNewWebdavUri() + "/trashbin/" + client.getUserId() + "/restore/" +
@@ -83,11 +83,11 @@ public class RestoreTrashbinFileRemoteOperation extends RemoteOperation {
             move = new MoveMethod(source, target, true);
             int status = client.executeMethod(move, RESTORE_READ_TIMEOUT, RESTORE_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult(isSuccess(status), move);
+            result = new RemoteOperationResult<B>(isSuccess(status), move);
 
             client.exhaustResponse(move.getResponseBodyAsStream());
         } catch (IOException e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log.e(TAG, "Restore trashbin file " + sourcePath + " failed: " + result.getLogMessage(), e);
         } finally {
             if (move != null) {

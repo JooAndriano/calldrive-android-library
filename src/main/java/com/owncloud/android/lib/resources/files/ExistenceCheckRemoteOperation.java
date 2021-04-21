@@ -41,7 +41,7 @@ import org.apache.commons.httpclient.methods.HeadMethod;
  * 
  * @author David A. Velasco
  */
-public class ExistenceCheckRemoteOperation extends RemoteOperation {
+public class ExistenceCheckRemoteOperation extends RemoteOperation<B> {
     
     /** Maximum time to wait for a response from the server in MILLISECONDs.  */
     public static final int TIMEOUT = 50000;
@@ -81,8 +81,8 @@ public class ExistenceCheckRemoteOperation extends RemoteOperation {
     }
 
     @Override
-	protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+	protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         HeadMethod head = null;
         boolean previousFollowRedirects = client.isFollowRedirects();
         try {
@@ -96,7 +96,7 @@ public class ExistenceCheckRemoteOperation extends RemoteOperation {
             client.exhaustResponse(head.getResponseBodyAsStream());
             boolean success = (status == HttpStatus.SC_OK && !mSuccessIfAbsent) ||
                     (status == HttpStatus.SC_NOT_FOUND && mSuccessIfAbsent);
-            result = new RemoteOperationResult(
+            result = new RemoteOperationResult<B>(
                 success,
                 status,
                 head.getStatusText(),
@@ -108,7 +108,7 @@ public class ExistenceCheckRemoteOperation extends RemoteOperation {
                     "finished with HTTP status " + status + (!success?"(FAIL)":""));
             
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Existence check for " + client.getWebdavUri() +
                     WebdavUtils.encodePath(mPath) + " targeting for " +
                     (mSuccessIfAbsent ? " absence " : " existence ") + ": " +

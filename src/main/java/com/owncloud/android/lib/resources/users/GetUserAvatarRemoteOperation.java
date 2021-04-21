@@ -46,7 +46,7 @@ import java.util.ArrayList;
 /**
  * Gets avatar about the user logged in, if available
  */
-public class GetUserAvatarRemoteOperation extends RemoteOperation {
+public class GetUserAvatarRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetUserAvatarRemoteOperation.class.getSimpleName();
 
@@ -68,8 +68,8 @@ public class GetUserAvatarRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         GetMethod get = null;
         InputStream inputStream = null;
         BufferedInputStream bis = null;
@@ -109,7 +109,7 @@ public class GetUserAvatarRemoteOperation extends RemoteOperation {
                 Header contentType = get.getResponseHeader(CONTENT_TYPE);
                 if (contentType == null || !contentType.getValue().startsWith("image")) {
                     Log_OC.e(TAG, "Not an image, failing with no avatar");
-                    result = new RemoteOperationResult(RemoteOperationResult.ResultCode.FILE_NOT_FOUND);
+                    result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.FILE_NOT_FOUND);
                     return result;
                 }
                 mimeType = contentType.getValue();
@@ -132,12 +132,12 @@ public class GetUserAvatarRemoteOperation extends RemoteOperation {
                 result = createResult(get, bos.toByteArray(), mimeType);
 
             } else {
-                result = new RemoteOperationResult(false, get);
+                result = new RemoteOperationResult<B>(false, get);
                 client.exhaustResponse(get.getResponseBodyAsStream());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting OC user avatar", e);
 
         } finally {
@@ -168,14 +168,14 @@ public class GetUserAvatarRemoteOperation extends RemoteOperation {
         return result;
     }
 
-    private RemoteOperationResult createResult(GetMethod get, byte[] avatarData, String mimeType) throws IOException {
+    private RemoteOperationResult<B> createResult(GetMethod get, byte[] avatarData, String mimeType) throws IOException {
         // find out etag
         String etag = WebdavUtils.getEtagFromResponse(get);
         if (etag.length() == 0) {
             Log_OC.w(TAG, "Could not read Etag from avatar");
         }
 
-        RemoteOperationResult result = new RemoteOperationResult(true, get);
+        RemoteOperationResult<B> result = new RemoteOperationResult<B>(true, get);
         ResultData resultData = new ResultData(avatarData, mimeType, etag);
         ArrayList<Object> data = new ArrayList<>();
         data.add(resultData);

@@ -43,7 +43,7 @@ import lombok.AllArgsConstructor;
  */
 
 @AllArgsConstructor
-public class DirectEditingOpenFileRemoteOperation extends RemoteOperation {
+public class DirectEditingOpenFileRemoteOperation extends RemoteOperation<B> {
     private static final String TAG = DirectEditingOpenFileRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
     private static final int SYNC_CONNECTION_TIMEOUT = 5000;
@@ -54,8 +54,8 @@ public class DirectEditingOpenFileRemoteOperation extends RemoteOperation {
     private String filePath;
     private String editor;
 
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         Utf8PostMethod postMethod = null;
 
         try {
@@ -75,14 +75,14 @@ public class DirectEditingOpenFileRemoteOperation extends RemoteOperation {
                 JSONObject respJSON = new JSONObject(response);
                 String url = (String) respJSON.getJSONObject("ocs").getJSONObject("data").get("url");
 
-                result = new RemoteOperationResult(true, postMethod);
+                result = new RemoteOperationResult<B>(true, postMethod);
                 result.setSingleData(url);
             } else {
-                result = new RemoteOperationResult(false, postMethod);
+                result = new RemoteOperationResult<B>(false, postMethod);
                 client.exhaustResponse(postMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Get all direct editing informations failed: " + result.getLogMessage(),
                      result.getException());
         } finally {

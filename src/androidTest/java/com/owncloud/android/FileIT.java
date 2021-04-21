@@ -113,7 +113,7 @@ public class FileIT extends AbstractIT {
         assertTrue(new ReadFolderRemoteOperation(path).execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile parentFolder = (RemoteFile) result.getData().get(0);
@@ -145,7 +145,7 @@ public class FileIT extends AbstractIT {
                            .execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile parentFolder = (RemoteFile) result.getData().get(0);
@@ -179,7 +179,7 @@ public class FileIT extends AbstractIT {
                            .execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile parentFolder = (RemoteFile) result.getData().get(0);
@@ -214,7 +214,7 @@ public class FileIT extends AbstractIT {
                            .execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile parentFolder = (RemoteFile) result.getData().get(0);
@@ -259,7 +259,7 @@ public class FileIT extends AbstractIT {
                            .execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile parentFolder = (RemoteFile) result.getData().get(0);
@@ -307,7 +307,7 @@ public class FileIT extends AbstractIT {
                            .execute(client).isSuccess());
 
         // verify
-        RemoteOperationResult result = new ReadFolderRemoteOperation(path).execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation(path).execute(client);
         assertTrue(result.isSuccess());
 
         RemoteFile folder = (RemoteFile) result.getData().get(0);

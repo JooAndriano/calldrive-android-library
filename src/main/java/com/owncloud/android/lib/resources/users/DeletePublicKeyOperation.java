@@ -40,7 +40,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
  * Remote operation performing to delete the public key for an user
  */
 
-public class DeletePublicKeyOperation extends RemoteOperation {
+public class DeletePublicKeyOperation extends RemoteOperation<B> {
 
     private static final String TAG = DeletePublicKeyOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -51,9 +51,9 @@ public class DeletePublicKeyOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         DeleteMethod postMethod = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
 
         try {
             // remote request
@@ -62,11 +62,11 @@ public class DeletePublicKeyOperation extends RemoteOperation {
 
             int status = client.executeMethod(postMethod, SYNC_READ_TIMEOUT, SYNC_CONNECTION_TIMEOUT);
 
-            result = new RemoteOperationResult(status == HttpStatus.SC_OK, postMethod);
+            result = new RemoteOperationResult<B>(status == HttpStatus.SC_OK, postMethod);
 
             client.exhaustResponse(postMethod.getResponseBodyAsStream());
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Deletion of public key failed: " + result.getLogMessage(), result.getException());
         } finally {
             if (postMethod != null)

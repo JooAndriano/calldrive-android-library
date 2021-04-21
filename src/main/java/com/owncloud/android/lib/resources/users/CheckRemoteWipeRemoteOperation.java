@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * Remote operation performing check if app token is scheduled for remote wipe
  */
 
-public class CheckRemoteWipeRemoteOperation extends RemoteOperation {
+public class CheckRemoteWipeRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = CheckRemoteWipeRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -56,9 +56,9 @@ public class CheckRemoteWipeRemoteOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
 
         try {
             postMethod = new Utf8PostMethod(client.getBaseUri() + REMOTE_WIPE_URL + JSON_FORMAT);
@@ -73,17 +73,17 @@ public class CheckRemoteWipeRemoteOperation extends RemoteOperation {
                 JSONObject json = new JSONObject(response);
 
                 if (json.getBoolean(WIPE)) {
-                    result = new RemoteOperationResult(true, postMethod);
+                    result = new RemoteOperationResult<B>(true, postMethod);
                 } else {
-                    result = new RemoteOperationResult(false, postMethod);
+                    result = new RemoteOperationResult<B>(false, postMethod);
                 }
             } else {
-                result = new RemoteOperationResult(false, postMethod);
+                result = new RemoteOperationResult<B>(false, postMethod);
             }
 
             client.exhaustResponse(postMethod.getResponseBodyAsStream());
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG,
                      "Getting remote wipe status failed: " + result.getLogMessage(),
                      result.getException());

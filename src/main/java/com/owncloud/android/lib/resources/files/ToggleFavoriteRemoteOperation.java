@@ -46,7 +46,7 @@ import java.io.IOException;
 /**
  * Favorite or unfavorite a file.
  */
-public class ToggleFavoriteRemoteOperation extends RemoteOperation {
+public class ToggleFavoriteRemoteOperation extends RemoteOperation<B> {
     private boolean makeItFavorited;
     private String filePath;
 
@@ -56,8 +56,8 @@ public class ToggleFavoriteRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         PropPatchMethod propPatchMethod = null;
 
         DavPropertySet newProps = new DavPropertySet();
@@ -82,13 +82,13 @@ public class ToggleFavoriteRemoteOperation extends RemoteOperation {
             boolean isSuccess = (status == HttpStatus.SC_MULTI_STATUS || status == HttpStatus.SC_OK);
 
             if (isSuccess) {
-                result = new RemoteOperationResult(true, status, propPatchMethod.getResponseHeaders());
+                result = new RemoteOperationResult<B>(true, status, propPatchMethod.getResponseHeaders());
             } else {
                 client.exhaustResponse(propPatchMethod.getResponseBodyAsStream());
-                result = new RemoteOperationResult(false, status, propPatchMethod.getResponseHeaders());
+                result = new RemoteOperationResult<B>(false, status, propPatchMethod.getResponseHeaders());
             }
         } catch (IOException e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
         }  finally {
             if (propPatchMethod != null) {
                 propPatchMethod.releaseConnection();  // let the connection available for other methods

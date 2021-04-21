@@ -43,7 +43,7 @@ import java.util.ArrayList;
 /**
  * Remote operation performing the search in the Calldrive server.
  */
-public class SearchRemoteOperation extends RemoteOperation {
+public class SearchRemoteOperation extends RemoteOperation<B> {
 
 
     public enum SearchType {
@@ -80,8 +80,8 @@ public class SearchRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         NcSearchMethod searchMethod = null;
         OptionsMethod optionsMethod;
 
@@ -119,7 +119,7 @@ public class SearchRemoteOperation extends RemoteOperation {
                                                                                  client.getUserIdPlain());
 
                     // Result of the operation
-                    result = new RemoteOperationResult(true, status, searchMethod.getResponseHeaders());
+                    result = new RemoteOperationResult<B>(true, status, searchMethod.getResponseHeaders());
                     // Add data to the result
                     if (result.isSuccess()) {
                         result.setData(mFolderAndFiles);
@@ -127,15 +127,15 @@ public class SearchRemoteOperation extends RemoteOperation {
                 } else {
                     // synchronization failed
                     client.exhaustResponse(searchMethod.getResponseBodyAsStream());
-                    result = new RemoteOperationResult(false, status, searchMethod.getResponseHeaders());
+                    result = new RemoteOperationResult<B>(false, status, searchMethod.getResponseHeaders());
                 }
             } else {
                 client.exhaustResponse(optionsMethod.getResponseBodyAsStream());
-                result = new RemoteOperationResult(false, optionsStatus, optionsMethod.getResponseHeaders());
+                result = new RemoteOperationResult<B>(false, optionsStatus, optionsMethod.getResponseHeaders());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
         } finally {
             if (searchMethod != null) {
                 searchMethod.releaseConnection();  // let the connection available for other methods

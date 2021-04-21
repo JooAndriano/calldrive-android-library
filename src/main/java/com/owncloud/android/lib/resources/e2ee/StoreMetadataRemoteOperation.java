@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Remote operation to store the folder metadata
  */
 
-public class StoreMetadataRemoteOperation extends RemoteOperation {
+public class StoreMetadataRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = StoreMetadataRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -73,9 +73,9 @@ public class StoreMetadataRemoteOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         Utf8PostMethod postMethod = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
 
         try {
             // remote request
@@ -93,16 +93,16 @@ public class StoreMetadataRemoteOperation extends RemoteOperation {
                 String metadata = (String) respJSON.getJSONObject(NODE_OCS).getJSONObject(NODE_DATA)
                         .get(NODE_META_DATA);
 
-                result = new RemoteOperationResult(true, postMethod);
+                result = new RemoteOperationResult<B>(true, postMethod);
                 ArrayList<Object> keys = new ArrayList<>();
                 keys.add(metadata);
                 result.setData(keys);
             } else {
-                result = new RemoteOperationResult(false, postMethod);
+                result = new RemoteOperationResult<B>(false, postMethod);
                 client.exhaustResponse(postMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Storing of metadata for folder " + fileId + " failed: " + result.getLogMessage(),
                     result.getException());
         } finally {

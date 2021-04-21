@@ -40,7 +40,7 @@ public class DirectEditingObtainListOfTemplatesRemoteOperationTest extends Abstr
 
     @Test
     public void testGetAll() {
-        RemoteOperationResult result = new DirectEditingObtainListOfTemplatesRemoteOperation("text",
+        RemoteOperationResult<B> result = new DirectEditingObtainListOfTemplatesRemoteOperation("text",
                 "textdocument")
                 .execute(client);
         assertTrue(result.isSuccess());

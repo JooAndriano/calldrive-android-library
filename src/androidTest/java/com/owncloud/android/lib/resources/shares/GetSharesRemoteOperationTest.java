@@ -52,7 +52,7 @@ public class GetSharesRemoteOperationTest extends AbstractIT {
 
         GetSharesRemoteOperation sut = new GetSharesRemoteOperation();
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
 
         assertEquals(0, result.getData().size());

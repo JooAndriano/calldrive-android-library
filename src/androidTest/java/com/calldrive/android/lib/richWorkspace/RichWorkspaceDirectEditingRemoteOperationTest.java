@@ -40,7 +40,7 @@ public class RichWorkspaceDirectEditingRemoteOperationTest extends AbstractIT {
 
     @Test
     public void getEditLinkForRoot() {
-        RemoteOperationResult result = new RichWorkspaceDirectEditingRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new RichWorkspaceDirectEditingRemoteOperation("/").execute(client);
         assertTrue(result.isSuccess());
         assertNotNull(result.getSingleData());
 
@@ -55,7 +55,7 @@ public class RichWorkspaceDirectEditingRemoteOperationTest extends AbstractIT {
 
         assertTrue(new CreateFolderRemoteOperation(path, true).execute(client).isSuccess());
 
-        RemoteOperationResult result = new RichWorkspaceDirectEditingRemoteOperation(path).execute(client);
+        RemoteOperationResult<B> result = new RichWorkspaceDirectEditingRemoteOperation(path).execute(client);
         assertTrue(result.isSuccess());
         assertNotNull(result.getSingleData());
 
@@ -72,7 +72,7 @@ public class RichWorkspaceDirectEditingRemoteOperationTest extends AbstractIT {
 
         assertTrue(new CreateFolderRemoteOperation(folder, true).execute(client).isSuccess());
 
-        RemoteOperationResult uploadResult = new UploadFileRemoteOperation(txtFile.getAbsolutePath(),
+        RemoteOperationResult<B> uploadResult = new UploadFileRemoteOperation(txtFile.getAbsolutePath(),
                 filePath,
                 "txt/plain",
                 String.valueOf(System.currentTimeMillis() / 1000))
@@ -80,7 +80,7 @@ public class RichWorkspaceDirectEditingRemoteOperationTest extends AbstractIT {
 
         assertTrue("Error uploading file " + filePath + ": " + uploadResult, uploadResult.isSuccess());
 
-        RemoteOperationResult result = new RichWorkspaceDirectEditingRemoteOperation(folder).execute(client);
+        RemoteOperationResult<B> result = new RichWorkspaceDirectEditingRemoteOperation(folder).execute(client);
         assertTrue(result.isSuccess());
         assertNotNull(result.getSingleData());
 

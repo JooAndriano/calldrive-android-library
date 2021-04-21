@@ -50,7 +50,7 @@ public class GetCapabilitiesTest extends AbstractIT {
     @Test
     public void testGetRemoteCapabilitiesOperation() {
         // get capabilities
-        RemoteOperationResult result = new GetCapabilitiesRemoteOperation().execute(client);
+        RemoteOperationResult<B> result = new GetCapabilitiesRemoteOperation().execute(client);
         assertTrue(result.isSuccess());
         assertTrue(result.getData() != null && result.getData().size() == 1);
 
@@ -61,13 +61,13 @@ public class GetCapabilitiesTest extends AbstractIT {
     @Test
     public void testGetRemoteCapabilitiesOperationEtag() {
         // get capabilities
-        RemoteOperationResult result = new GetCapabilitiesRemoteOperation().execute(client);
+        RemoteOperationResult<B> result = new GetCapabilitiesRemoteOperation().execute(client);
         assertTrue(result.isSuccess());
         assertTrue(result.getData() != null && result.getData().size() == 1);
 
         OCCapability capability = (OCCapability) result.getData().get(0);
 
-        RemoteOperationResult resultEtag = new GetCapabilitiesRemoteOperation(capability).execute(client);
+        RemoteOperationResult<B> resultEtag = new GetCapabilitiesRemoteOperation(capability).execute(client);
         assertTrue(resultEtag.isSuccess());
         assertTrue(resultEtag.getData() != null && resultEtag.getData().size() == 1);
 
@@ -88,7 +88,7 @@ public class GetCapabilitiesTest extends AbstractIT {
     @Test
     public void testGetRemoteCapabilitiesOperationWithCalldriveClient() {
         // get capabilities
-        RemoteOperationResult result = new GetCapabilitiesRemoteOperation().execute(calldriveClient);
+        RemoteOperationResult<B> result = new GetCapabilitiesRemoteOperation().execute(calldriveClient);
         assertTrue(result.isSuccess());
         assertTrue(result.getData() != null && result.getData().size() == 1);
 
@@ -99,13 +99,13 @@ public class GetCapabilitiesTest extends AbstractIT {
     @Test
     public void testGetRemoteCapabilitiesOperationEtagWithCalldriveClient() {
         // get capabilities
-        RemoteOperationResult result = new GetCapabilitiesRemoteOperation().execute(calldriveClient);
+        RemoteOperationResult<B> result = new GetCapabilitiesRemoteOperation().execute(calldriveClient);
         assertTrue(result.isSuccess());
         assertTrue(result.getData() != null && result.getData().size() == 1);
 
         OCCapability capability = (OCCapability) result.getData().get(0);
 
-        RemoteOperationResult resultEtag = new GetCapabilitiesRemoteOperation(capability).execute(calldriveClient);
+        RemoteOperationResult<B> resultEtag = new GetCapabilitiesRemoteOperation(capability).execute(calldriveClient);
         assertTrue(resultEtag.isSuccess());
         assertTrue(resultEtag.getData() != null && resultEtag.getData().size() == 1);
 

@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * Remote operation performing the read of remote trashbin folder on Calldrive server.
  */
 
-public class ReadTrashbinFolderRemoteOperation extends RemoteOperation {
+public class ReadTrashbinFolderRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = ReadTrashbinFolderRemoteOperation.class.getSimpleName();
     
@@ -69,8 +69,8 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         PropFindMethod query = null;
 
         try {
@@ -89,7 +89,7 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation {
                 readData(dataInServer, client);
 
                 // Result of the operation
-                result = new RemoteOperationResult(true, query);
+                result = new RemoteOperationResult<B>(true, query);
                 // Add data to the result
                 if (result.isSuccess()) {
                     result.setData(folderAndFiles);
@@ -97,16 +97,16 @@ public class ReadTrashbinFolderRemoteOperation extends RemoteOperation {
             } else {
                 // synchronization failed
                 client.exhaustResponse(query.getResponseBodyAsStream());
-                result = new RemoteOperationResult(false, query);
+                result = new RemoteOperationResult<B>(false, query);
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
         } finally {
             if (query != null)
                 query.releaseConnection();  // let the connection available for other methods
 
             if (result == null) {
-                result = new RemoteOperationResult(new Exception("unknown error"));
+                result = new RemoteOperationResult<B>(new Exception("unknown error"));
                 Log_OC.e(TAG, "Synchronized " + remotePath + ": failed");
             } else {
                 if (result.isSuccess()) {

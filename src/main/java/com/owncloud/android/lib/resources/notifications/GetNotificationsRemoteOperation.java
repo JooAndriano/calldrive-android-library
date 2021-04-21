@@ -52,7 +52,7 @@ import java.util.List;
  * accessible via the notifications endpoint at {@value OCS_ROUTE_LIST_V12_AND_UP}, specified at
  * {@link "https://github.com/calldrive/notifications/blob/master/docs/ocs-endpoint-v2.md"}.
  */
-public class GetNotificationsRemoteOperation extends RemoteOperation {
+public class GetNotificationsRemoteOperation extends RemoteOperation<B> {
 
     // OCS Route
     private static final String OCS_ROUTE_LIST_V12_AND_UP =
@@ -66,8 +66,8 @@ public class GetNotificationsRemoteOperation extends RemoteOperation {
     private static final String NODE_DATA = "data";
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         int status = -1;
         GetMethod get = null;
         List<Notification> notifications;
@@ -82,14 +82,14 @@ public class GetNotificationsRemoteOperation extends RemoteOperation {
             String response = get.getResponseBodyAsString();
 
             if (isSuccess(status)) {
-                result = new RemoteOperationResult(true, status, get.getResponseHeaders());
+                result = new RemoteOperationResult<B>(true, status, get.getResponseHeaders());
                 Log_OC.d(TAG, "Successful response: " + response);
 
                 // Parse the response
                 notifications = parseResult(response);
                 result.setNotificationData(notifications);
             } else {
-                result = new RemoteOperationResult(false, status, get.getResponseHeaders());
+                result = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
                 Log_OC.e(TAG, "Failed response while getting user notifications ");
                 if (response != null) {
                     Log_OC.e(TAG, "*** status code: " + status + " ; response message: " + response);
@@ -98,7 +98,7 @@ public class GetNotificationsRemoteOperation extends RemoteOperation {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting remote notifications", e);
         } finally {
             if (get != null) {

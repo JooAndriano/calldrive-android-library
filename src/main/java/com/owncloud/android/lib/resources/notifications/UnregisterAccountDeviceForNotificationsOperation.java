@@ -34,7 +34,7 @@ import com.owncloud.android.lib.common.utils.Log_OC;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 
-public class UnregisterAccountDeviceForNotificationsOperation extends RemoteOperation {
+public class UnregisterAccountDeviceForNotificationsOperation extends RemoteOperation<B> {
 
     // OCS Route
     private static final String OCS_ROUTE =
@@ -43,8 +43,8 @@ public class UnregisterAccountDeviceForNotificationsOperation extends RemoteOper
     private static final String TAG = UnregisterAccountDeviceForNotificationsOperation.class.getSimpleName();
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         int status = -1;
         DeleteMethod delete = null;
 
@@ -58,14 +58,14 @@ public class UnregisterAccountDeviceForNotificationsOperation extends RemoteOper
             String response = delete.getResponseBodyAsString();
 
             if(isSuccess(status)) {
-                result = new RemoteOperationResult(true, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult<B>(true, status, delete.getResponseHeaders());
                 Log_OC.d(TAG, "Successful response: " + response);
             } else {
-                result = new RemoteOperationResult(false, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult<B>(false, status, delete.getResponseHeaders());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while registering device for notifications", e);
 
         } finally {

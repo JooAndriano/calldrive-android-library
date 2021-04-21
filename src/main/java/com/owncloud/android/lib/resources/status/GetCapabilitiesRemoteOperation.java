@@ -49,7 +49,7 @@ import java.util.ArrayList;
  *
  * Save in Result.getData in a OCCapability object
  */
-public class GetCapabilitiesRemoteOperation extends RemoteOperation {
+public class GetCapabilitiesRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetCapabilitiesRemoteOperation.class.getSimpleName();
 
@@ -162,8 +162,8 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    public RemoteOperationResult run(CalldriveClient client) {
-        RemoteOperationResult result;
+    public RemoteOperationResult<B> run(CalldriveClient client) {
+        RemoteOperationResult<B> result;
         int status;
         GetMethod get = null;
 
@@ -185,7 +185,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
             if (isNotModified(status)) {
                 Log_OC.d(TAG, "Capabilities not modified");
 
-                result = new RemoteOperationResult(true, get);
+                result = new RemoteOperationResult<B>(true, get);
                 result.setSingleData(currentCapability);
 
                 Log_OC.d(TAG, "*** Get Capabilities completed ");
@@ -201,10 +201,10 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
                 }
 
                 // Result
-                result = new RemoteOperationResult(true, get);
+                result = new RemoteOperationResult<B>(true, get);
                 result.setSingleData(capability);
             } else {
-                result = new RemoteOperationResult(false, get);
+                result = new RemoteOperationResult<B>(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting capabilities from the server ");
                 if (response != null) {
@@ -214,7 +214,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
                 }
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting capabilities", e);
 
         } finally {
@@ -226,8 +226,8 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         int status;
         org.apache.commons.httpclient.methods.GetMethod get = null;
 
@@ -250,7 +250,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
             if (isNotModified(status)) {
                 Log_OC.d(TAG, "Capabilities not modified");
 
-                result = new RemoteOperationResult(true, get);
+                result = new RemoteOperationResult<B>(true, get);
                 result.setSingleData(currentCapability);
 
                 Log_OC.d(TAG, "*** Get Capabilities completed ");
@@ -266,10 +266,10 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
                 }
 
                 // Result
-                result = new RemoteOperationResult(true, get);
+                result = new RemoteOperationResult<B>(true, get);
                 result.setSingleData(capability);
             } else {
-                result = new RemoteOperationResult(false, get);
+                result = new RemoteOperationResult<B>(false, get);
                 String response = get.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while getting capabilities from the server ");
                 if (response != null) {
@@ -279,7 +279,7 @@ public class GetCapabilitiesRemoteOperation extends RemoteOperation {
                 }
             }
         } catch (JSONException | IOException e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting capabilities", e);
 
         } finally {

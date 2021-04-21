@@ -57,7 +57,7 @@ public class CreateShareTest extends AbstractIT {
         mFullPath2NonExistentFile = NON_EXISTENT_FILE;
 
         File textFile = getFile(ASSETS__TEXT_FILE_NAME);
-        RemoteOperationResult result = new UploadFileRemoteOperation(textFile.getAbsolutePath(),
+        RemoteOperationResult<B> result = new UploadFileRemoteOperation(textFile.getAbsolutePath(),
                                                                      mFullPath2FileToShare,
                                                                      "txt/plain",
                                                                      String.valueOf(System.currentTimeMillis() / 1000))
@@ -68,7 +68,7 @@ public class CreateShareTest extends AbstractIT {
 
     @Test
     public void testCreatePublicShareSuccessful() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.PUBLIC_LINK,
                                                                       "",
                                                                       false,
@@ -79,7 +79,7 @@ public class CreateShareTest extends AbstractIT {
 
     @Test
     public void testCreatePublicShareFailure() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
                                                                       ShareType.PUBLIC_LINK,
                                                                       "",
                                                                       false,
@@ -95,7 +95,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithUserSuccessful() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.USER,
                                                                       "admin",
                                                                       false,
@@ -109,7 +109,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithUserNotExists() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.USER,
                                                                       "no_exist",
                                                                       false,
@@ -126,7 +126,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithFileNotExists() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
                                                                       ShareType.USER,
                                                                       "admin",
                                                                       false,
@@ -141,7 +141,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithGroupSuccessful() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.GROUP,
                                                                       "admin",
                                                                       false,
@@ -155,7 +155,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithNonExistingGroupSharee() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.GROUP,
                                                                       "no_exist",
                                                                       false,
@@ -172,7 +172,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreatePrivateShareWithNonExistingFile() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
                                                                       ShareType.GROUP,
                                                                       "admin",
                                                                       false,
@@ -201,7 +201,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreateFederatedShareWithNonExistingSharee() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.FEDERATED,
                                                                       "no_exist@" + serverUri2,
                                                                       false,
@@ -224,7 +224,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreateFederatedShareWithNonExistingRemoteServer() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2FileToShare,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2FileToShare,
                                                                       ShareType.FEDERATED,
                                                                       "no_exist",
                                                                       false,
@@ -245,7 +245,7 @@ public class CreateShareTest extends AbstractIT {
      */
     @Test
     public void testCreateFederatedShareWithNonExistingFile() {
-        RemoteOperationResult result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
+        RemoteOperationResult<B> result = new CreateShareRemoteOperation(mFullPath2NonExistentFile,
                                                                       ShareType.FEDERATED,
                                                                       "admin@" + serverUri2,
                                                                       false,

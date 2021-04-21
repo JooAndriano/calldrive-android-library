@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author masensio
  */
 
-public class DownloadFileRemoteOperation extends RemoteOperation {
+public class DownloadFileRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = DownloadFileRemoteOperation.class.getSimpleName();
 
@@ -76,8 +76,8 @@ public class DownloadFileRemoteOperation extends RemoteOperation {
     }
 
 	@Override
-	protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+	protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
 
         /// download will be performed to a temporal file, then moved to the final location
         File tmpFile = new File(getTmpPath());
@@ -86,12 +86,12 @@ public class DownloadFileRemoteOperation extends RemoteOperation {
         try {
             tmpFile.getParentFile().mkdirs();
             int status = downloadFile(client, tmpFile);
-            result = new RemoteOperationResult(isSuccess(status), getMethod);
+            result = new RemoteOperationResult<B>(isSuccess(status), getMethod);
             Log_OC.i(TAG, "Download of " + remotePath + " to " + getTmpPath() + ": " +
                 result.getLogMessage());
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Download of " + remotePath + " to " + getTmpPath() + ": " +
                 result.getLogMessage(), e);
         }

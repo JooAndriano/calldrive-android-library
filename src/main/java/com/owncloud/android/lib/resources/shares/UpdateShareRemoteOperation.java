@@ -50,7 +50,7 @@ import java.util.Locale;
  * 
  * Allow updating several parameters, triggering a request to the server per parameter.
  */
-public class UpdateShareRemoteOperation extends RemoteOperation {
+public class UpdateShareRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetShareRemoteOperation.class.getSimpleName();
 
@@ -183,8 +183,8 @@ public class UpdateShareRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         int status;
 
         /// prepare array of parameters to update
@@ -270,7 +270,7 @@ public class UpdateShareRemoteOperation extends RemoteOperation {
                     result = parser.parse(response);
 
                 } else {
-                    result = new RemoteOperationResult(false, put);
+                    result = new RemoteOperationResult<B>(false, put);
                 }
                 if (!result.isSuccess()) {
                     break;
@@ -278,7 +278,7 @@ public class UpdateShareRemoteOperation extends RemoteOperation {
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while updating remote share ", e);
             if (put != null) {
                 put.releaseConnection();

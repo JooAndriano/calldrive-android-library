@@ -52,7 +52,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.FILE_ID_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(0, result.getData().size());
     }
@@ -61,7 +61,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
     public void testSearchByFileIdSuccess() {
         assertTrue(new CreateFolderRemoteOperation("/test/", true).execute(client).isSuccess());
 
-        RemoteOperationResult readFile = new ReadFileRemoteOperation("/test/").execute(client);
+        RemoteOperationResult<B> readFile = new ReadFileRemoteOperation("/test/").execute(client);
         assertTrue(readFile.isSuccess());
 
         RemoteFile remoteFile = ((RemoteFile) readFile.getSingleData());
@@ -69,7 +69,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.FILE_ID_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(1, result.getData().size());
         assertEquals("/test/", ((RemoteFile) result.getData().get(0)).getRemotePath());
@@ -88,7 +88,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.FILE_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(0, result.getData().size());
     }
@@ -104,7 +104,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
 
         SearchRemoteOperation sut = new SearchRemoteOperation("", SearchRemoteOperation.SearchType.FILE_SEARCH, false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(10, result.getData().size());
     }
@@ -122,7 +122,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.FILE_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertEquals(1, result.getData().size());
         RemoteFile remoteFile = (RemoteFile) result.getData().get(0);
         assertEquals("/image5.jpg", remoteFile.getRemotePath());
@@ -133,7 +133,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("",
                                                               SearchRemoteOperation.SearchType.FAVORITE_SEARCH,
                                                               false);
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertTrue(result.getData().isEmpty());
     }
@@ -149,7 +149,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("",
                                                               SearchRemoteOperation.SearchType.FAVORITE_SEARCH,
                                                               false);
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
 
         // test
         assertTrue(result.isSuccess());
@@ -184,7 +184,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.RECENTLY_MODIFIED_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(3, result.getData().size());
 
@@ -198,7 +198,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("image/%", SearchRemoteOperation.SearchType.PHOTO_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertTrue(result.getData().isEmpty());
     }
@@ -216,7 +216,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("image/%", SearchRemoteOperation.SearchType.PHOTO_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(1, result.getData().size());
     }
@@ -238,7 +238,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.PHOTO_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(10, result.getData().size());
 
@@ -263,7 +263,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               false);
 
         // get all
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertEquals(10, result.getData().size());
 
         // limit to timestamp 5
@@ -291,7 +291,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.PHOTO_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(10, result.getData().size());
 
@@ -323,7 +323,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("image/%", SearchRemoteOperation.SearchType.GALLERY_SEARCH,
                                                               false);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(11, result.getData().size());
     }
@@ -340,7 +340,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
         SearchRemoteOperation sut = new SearchRemoteOperation("", SearchRemoteOperation.SearchType.FILE_SEARCH,
                                                               true);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertTrue(result.getData().isEmpty());
 
@@ -365,7 +365,7 @@ public class SearchRemoteOperationTest extends AbstractIT {
                                                               SearchRemoteOperation.SearchType.FILE_SEARCH,
                                                               true);
 
-        RemoteOperationResult result = sut.execute(client);
+        RemoteOperationResult<B> result = sut.execute(client);
         assertTrue(result.isSuccess());
         assertEquals(0, result.getData().size());
     }

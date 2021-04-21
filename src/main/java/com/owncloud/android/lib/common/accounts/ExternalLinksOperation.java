@@ -48,7 +48,7 @@ import java.util.ArrayList;
  * gets external links provided by 'external' app
  */
 
-public class ExternalLinksOperation extends RemoteOperation {
+public class ExternalLinksOperation extends RemoteOperation<B> {
 
     private static final String TAG = ExternalLinksOperation.class.getSimpleName();
 
@@ -68,16 +68,16 @@ public class ExternalLinksOperation extends RemoteOperation {
 
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result = null;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result = null;
         int status = -1;
         GetMethod get = null;
         String ocsUrl = client.getBaseUri() + OCS_ROUTE_EXTERNAL_LINKS;
 
         try {
             // check capabilities
-            RemoteOperation getCapabilities = new GetCapabilitiesRemoteOperation();
-            RemoteOperationResult capabilitiesResult = getCapabilities.execute(client);
+            RemoteOperation<B> getCapabilities = new GetCapabilitiesRemoteOperation();
+            RemoteOperationResult<B> capabilitiesResult = getCapabilities.execute(client);
             OCCapability capability = (OCCapability) capabilitiesResult.getData().get(0);
 
             if (capability.getExternalLinks().isTrue()) {
@@ -137,11 +137,11 @@ public class ExternalLinksOperation extends RemoteOperation {
                         }
                     }
 
-                    result = new RemoteOperationResult(true, status, get.getResponseHeaders());
+                    result = new RemoteOperationResult<B>(true, status, get.getResponseHeaders());
                     result.setData(resultLinks);
 
                 } else {
-                    result = new RemoteOperationResult(false, status, get.getResponseHeaders());
+                    result = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
                     String response = get.getResponseBodyAsString();
                     Log_OC.e(TAG, "Failed response while getting external links ");
                     if (response != null) {
@@ -151,12 +151,12 @@ public class ExternalLinksOperation extends RemoteOperation {
                     }
                 }
             } else {
-                result = new RemoteOperationResult(RemoteOperationResult.ResultCode.NOT_AVAILABLE);
+                result = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.NOT_AVAILABLE);
                 Log_OC.d(TAG, "External links disabled");
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while getting external links ", e);
         } finally {
             if (get != null) {

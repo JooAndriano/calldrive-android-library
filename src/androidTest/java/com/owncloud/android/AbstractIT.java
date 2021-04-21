@@ -144,7 +144,7 @@ public abstract class AbstractIT {
             InterruptedException {
         GetStatusRemoteOperation getStatus = new GetStatusRemoteOperation(context);
 
-        RemoteOperationResult result = getStatus.execute(client);
+        RemoteOperationResult<B> result = getStatus.execute(client);
 
         if (result.isSuccess()) {
             Log_OC.d("AbstractIT", "Connection to server successful");
@@ -222,7 +222,7 @@ public abstract class AbstractIT {
 
     @After
     public void after() {
-        RemoteOperationResult result = new ReadFolderRemoteOperation("/").execute(client);
+        RemoteOperationResult<B> result = new ReadFolderRemoteOperation("/").execute(client);
         assertTrue(result.getLogMessage(), result.isSuccess());
 
         for (Object object : result.getData()) {

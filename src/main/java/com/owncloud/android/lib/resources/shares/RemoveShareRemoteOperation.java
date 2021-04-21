@@ -38,7 +38,7 @@ import org.apache.jackrabbit.webdav.client.methods.DeleteMethod;
  * Remove a share
  */
 
-public class RemoveShareRemoteOperation extends RemoteOperation {
+public class RemoveShareRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = RemoveShareRemoteOperation.class.getSimpleName();
 
@@ -56,8 +56,8 @@ public class RemoveShareRemoteOperation extends RemoteOperation {
     }
 
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         DeleteMethod delete = null;
 
         try {
@@ -79,10 +79,10 @@ public class RemoveShareRemoteOperation extends RemoteOperation {
                 Log_OC.d(TAG, "Unshare " + remoteShareId + ": " + result.getLogMessage());
 
             } else {
-                result = new RemoteOperationResult(false, delete);
+                result = new RemoteOperationResult<B>(false, delete);
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Unshare Link Exception " + result.getLogMessage(), e);
 
         } finally {

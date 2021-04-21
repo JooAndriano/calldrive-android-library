@@ -50,7 +50,7 @@ import java.util.ArrayList;
  * @author David A. Velasco
  * @author masensio
  */
-public class GetStatusRemoteOperation extends RemoteOperation {
+public class GetStatusRemoteOperation extends RemoteOperation<B> {
     
     /** 
      * Maximum time to wait for a response from the server when the connection is being tested, in MILLISECONDs.
@@ -66,7 +66,7 @@ public class GetStatusRemoteOperation extends RemoteOperation {
     private static final String PROTOCOL_HTTP = "http://";
     private static final int UNTRUSTED_DOMAIN_ERROR_CODE = 15;
 
-    private RemoteOperationResult mLatestResult;
+    private RemoteOperationResult<B> mLatestResult;
     private Context mContext;
 
     public GetStatusRemoteOperation(Context context) {
@@ -87,7 +87,7 @@ public class GetStatusRemoteOperation extends RemoteOperation {
             client.setFollowRedirects(false);
             boolean isRedirectToNonSecureConnection = false;
             int status = client.executeMethod(get, TRY_CONNECTION_TIMEOUT, TRY_CONNECTION_TIMEOUT);
-            mLatestResult = new RemoteOperationResult((status == HttpStatus.SC_OK), get);
+            mLatestResult = new RemoteOperationResult<B>((status == HttpStatus.SC_OK), get);
 
         	String redirectedLocation = mLatestResult.getRedirectedLocation();
         	while (redirectedLocation != null && redirectedLocation.length() > 0
@@ -100,7 +100,7 @@ public class GetStatusRemoteOperation extends RemoteOperation {
                 get.releaseConnection();
                 get = new GetMethod(redirectedLocation);
                 status = client.executeMethod(get, TRY_CONNECTION_TIMEOUT, TRY_CONNECTION_TIMEOUT);
-                mLatestResult = new RemoteOperationResult((status == HttpStatus.SC_OK), get);
+                mLatestResult = new RemoteOperationResult<B>((status == HttpStatus.SC_OK), get);
                 redirectedLocation = mLatestResult.getRedirectedLocation();
             }
 
@@ -109,7 +109,7 @@ public class GetStatusRemoteOperation extends RemoteOperation {
             if (status == HttpStatus.SC_OK) {
                 JSONObject json = new JSONObject(response);
                 if (!json.getBoolean(NODE_INSTALLED)) {
-                    mLatestResult = new RemoteOperationResult(
+                    mLatestResult = new RemoteOperationResult<B>(
                     		RemoteOperationResult.ResultCode.INSTANCE_NOT_CONFIGURED);
                 } else {
                     boolean extendedSupport = false;
@@ -121,14 +121,14 @@ public class GetStatusRemoteOperation extends RemoteOperation {
 					OwnCloudVersion ocVersion = new OwnCloudVersion(version);
 					
                     if (!ocVersion.isVersionValid()) {
-                        mLatestResult = new RemoteOperationResult(RemoteOperationResult.ResultCode.BAD_OC_VERSION);
+                        mLatestResult = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.BAD_OC_VERSION);
                     } else {
                     	// success
                     	if (isRedirectToNonSecureConnection) {
-                    		mLatestResult = new RemoteOperationResult(
+                    		mLatestResult = new RemoteOperationResult<B>(
                     		        RemoteOperationResult.ResultCode.OK_REDIRECT_TO_NON_SECURE_CONNECTION);
                     	} else {
-                    		mLatestResult = new RemoteOperationResult(
+                    		mLatestResult = new RemoteOperationResult<B>(
                     				baseUrlSt.startsWith(PROTOCOL_HTTPS) ?
                     						RemoteOperationResult.ResultCode.OK_SSL :
                 							RemoteOperationResult.ResultCode.OK_NO_SSL
@@ -147,22 +147,22 @@ public class GetStatusRemoteOperation extends RemoteOperation {
                     JSONObject json = new JSONObject(response);
 
                     if (json.getInt("code") == UNTRUSTED_DOMAIN_ERROR_CODE) {
-                        mLatestResult = new RemoteOperationResult(RemoteOperationResult.ResultCode.UNTRUSTED_DOMAIN);
+                        mLatestResult = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.UNTRUSTED_DOMAIN);
                     } else {
-                        mLatestResult = new RemoteOperationResult(false, status, get.getResponseHeaders());
+                        mLatestResult = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
                     }
                 } catch (JSONException e) {
-                    mLatestResult = new RemoteOperationResult(false, status, get.getResponseHeaders());
+                    mLatestResult = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
                 }
             } else {
-                mLatestResult = new RemoteOperationResult(false, status, get.getResponseHeaders());
+                mLatestResult = new RemoteOperationResult<B>(false, status, get.getResponseHeaders());
             }
 
         } catch (JSONException e) {
-            mLatestResult = new RemoteOperationResult(RemoteOperationResult.ResultCode.INSTANCE_NOT_CONFIGURED);
+            mLatestResult = new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.INSTANCE_NOT_CONFIGURED);
             
         } catch (Exception e) {
-            mLatestResult = new RemoteOperationResult(e);
+            mLatestResult = new RemoteOperationResult<B>(e);
             
         } finally {
             if (get != null)
@@ -191,9 +191,9 @@ public class GetStatusRemoteOperation extends RemoteOperation {
     }
 
 	@Override
-	protected RemoteOperationResult run(OwnCloudClient client) {
+	protected RemoteOperationResult<B> run(OwnCloudClient client) {
         if (!isOnline()) {
-        	return new RemoteOperationResult(RemoteOperationResult.ResultCode.NO_NETWORK_CONNECTION);
+        	return new RemoteOperationResult<B>(RemoteOperationResult.ResultCode.NO_NETWORK_CONNECTION);
         }
         String baseUriStr = client.getBaseUri().toString();
         if (baseUriStr.startsWith(PROTOCOL_HTTP) || baseUriStr.startsWith(PROTOCOL_HTTPS)) {

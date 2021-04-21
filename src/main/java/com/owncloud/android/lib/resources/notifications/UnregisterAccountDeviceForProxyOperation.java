@@ -57,8 +57,8 @@ public class UnregisterAccountDeviceForProxyOperation {
         this.userPublicKey = userPublicKey;
     }
 
-    public RemoteOperationResult run() {
-        RemoteOperationResult result;
+    public RemoteOperationResult<B> run() {
+        RemoteOperationResult<B> result;
         int status;
         HttpDeleteWithBody delete = null;
 
@@ -73,14 +73,14 @@ public class UnregisterAccountDeviceForProxyOperation {
             String response = delete.getResponseBodyAsString();
 
             if(isSuccess(status)) {
-                result = new RemoteOperationResult(true, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult<B>(true, status, delete.getResponseHeaders());
                 Log_OC.d(TAG, "Successful response: " + response);
             } else {
-                result = new RemoteOperationResult(false, status, delete.getResponseHeaders());
+                result = new RemoteOperationResult<B>(false, status, delete.getResponseHeaders());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Exception while registering device for notifications", e);
 
         } finally {

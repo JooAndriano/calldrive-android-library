@@ -42,7 +42,7 @@ import org.apache.commons.httpclient.methods.PutMethod;
  * Set encryption of a folder
  */
 
-public class ToggleEncryptionRemoteOperation extends RemoteOperation {
+public class ToggleEncryptionRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = ToggleEncryptionRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -66,17 +66,17 @@ public class ToggleEncryptionRemoteOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
-        RemoteOperationResult result;
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
+        RemoteOperationResult<B> result;
         HttpMethodBase method = null;
 
         ReadFolderRemoteOperation remoteFolderOperation = new ReadFolderRemoteOperation(remotePath);
-        RemoteOperationResult remoteFolderOperationResult = remoteFolderOperation.execute(client);
+        RemoteOperationResult<B> remoteFolderOperationResult = remoteFolderOperation.execute(client);
 
         // Abort if not empty
         // Result has always the folder and maybe children, so size == 1 is ok
         if (remoteFolderOperationResult.isSuccess() && remoteFolderOperationResult.getData().size() > 1) {
-            return new RemoteOperationResult(false, "Non empty", HttpStatus.SC_FORBIDDEN);
+            return new RemoteOperationResult<B>(false, "Non empty", HttpStatus.SC_FORBIDDEN);
         }
 
         try {
@@ -94,13 +94,13 @@ public class ToggleEncryptionRemoteOperation extends RemoteOperation {
             int status = client.executeMethod(method, SYNC_READ_TIMEOUT, SYNC_CONNECTION_TIMEOUT);
 
             if (status == HttpStatus.SC_OK) {
-                result = new RemoteOperationResult(true, method);
+                result = new RemoteOperationResult<B>(true, method);
             } else {
-                result = new RemoteOperationResult(false, method);
+                result = new RemoteOperationResult<B>(false, method);
                 client.exhaustResponse(method.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Setting encryption status of " + localId + " failed: " + result.getLogMessage(),
                     result.getException());
         } finally {

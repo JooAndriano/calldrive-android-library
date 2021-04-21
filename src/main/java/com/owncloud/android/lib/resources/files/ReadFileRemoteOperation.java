@@ -46,7 +46,7 @@ import java.util.ArrayList;
  * @author masensio
  */
 
-public class ReadFileRemoteOperation extends RemoteOperation {
+public class ReadFileRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = ReadFileRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -70,9 +70,9 @@ public class ReadFileRemoteOperation extends RemoteOperation {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         PropFindMethod propfind = null;
-        RemoteOperationResult result = null;
+        RemoteOperationResult<B> result = null;
 
         /// take the duty of check the server for the current state of the file there
         try {
@@ -97,16 +97,16 @@ public class ReadFileRemoteOperation extends RemoteOperation {
                 files.add(remoteFile);
 
                 // Result of the operation
-                result = new RemoteOperationResult(true, propfind);
+                result = new RemoteOperationResult<B>(true, propfind);
                 result.setData(files);
 
             } else {
-                result = new RemoteOperationResult(false, propfind);
+                result = new RemoteOperationResult<B>(false, propfind);
                 client.exhaustResponse(propfind.getResponseBodyAsStream());
             }
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Read file " + mRemotePath + " failed: " + result.getLogMessage(),
                 result.getException());
         } finally {

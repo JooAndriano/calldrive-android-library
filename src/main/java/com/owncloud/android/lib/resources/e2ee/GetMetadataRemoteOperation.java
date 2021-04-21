@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Remote operation performing the fetch of metadata for a folder
  */
 
-public class GetMetadataRemoteOperation extends RemoteOperation {
+public class GetMetadataRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = GetMetadataRemoteOperation.class.getSimpleName();
     private static final int SYNC_READ_TIMEOUT = 40000;
@@ -70,9 +70,9 @@ public class GetMetadataRemoteOperation extends RemoteOperation {
      * @param client Client object
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         GetMethod getMethod = null;
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
 
         try {
             // remote request
@@ -89,16 +89,16 @@ public class GetMetadataRemoteOperation extends RemoteOperation {
                 String metadata = (String) respJSON.getJSONObject(NODE_OCS).getJSONObject(NODE_DATA)
                         .get(NODE_META_DATA);
 
-                result = new RemoteOperationResult(true, getMethod);
+                result = new RemoteOperationResult<B>(true, getMethod);
                 ArrayList<Object> metadataArray = new ArrayList<>();
                 metadataArray.add(metadata);
                 result.setData(metadataArray);
             } else {
-                result = new RemoteOperationResult(false, getMethod);
+                result = new RemoteOperationResult<B>(false, getMethod);
                 client.exhaustResponse(getMethod.getResponseBodyAsStream());
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log_OC.e(TAG, "Fetching of metadata for folder " + fileId + " failed: " +
                     result.getLogMessage(), result.getException());
         } finally {

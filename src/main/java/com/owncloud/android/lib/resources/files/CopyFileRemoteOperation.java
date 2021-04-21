@@ -49,7 +49,7 @@ import java.io.IOException;
  *
  * @author David A. Velasco
  */
-public class CopyFileRemoteOperation extends RemoteOperation {
+public class CopyFileRemoteOperation extends RemoteOperation<B> {
 
     private static final String TAG = CopyFileRemoteOperation.class.getSimpleName();
 
@@ -84,21 +84,21 @@ public class CopyFileRemoteOperation extends RemoteOperation {
      * @param client Client object to communicate with the remote ownCloud server.
      */
     @Override
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
 
         /// check parameters
         if (mTargetRemotePath.equals(mSrcRemotePath)) {
             // nothing to do!
-            return new RemoteOperationResult(ResultCode.OK);
+            return new RemoteOperationResult<B>(ResultCode.OK);
         }
 
         if (mTargetRemotePath.startsWith(mSrcRemotePath)) {
-            return new RemoteOperationResult(ResultCode.INVALID_COPY_INTO_DESCENDANT);
+            return new RemoteOperationResult<B>(ResultCode.INVALID_COPY_INTO_DESCENDANT);
         }
 
         /// perform remote operation
         CopyMethod copyMethod = null;
-        RemoteOperationResult result = null;
+        RemoteOperationResult<B> result = null;
         try {
             copyMethod = new CopyMethod(
                     client.getWebdavUri() + WebdavUtils.encodePath(mSrcRemotePath),
@@ -113,7 +113,7 @@ public class CopyFileRemoteOperation extends RemoteOperation {
 
             } else if (status == HttpStatus.SC_PRECONDITION_FAILED && !mOverwrite) {
 
-                result = new RemoteOperationResult(ResultCode.INVALID_OVERWRITE);
+                result = new RemoteOperationResult<B>(ResultCode.INVALID_OVERWRITE);
                 client.exhaustResponse(copyMethod.getResponseBodyAsStream());
 
 
@@ -121,14 +121,14 @@ public class CopyFileRemoteOperation extends RemoteOperation {
                 /// http://www.webdav.org/specs/rfc4918.html#rfc.section.9.9.4
 
             } else {
-                result = new RemoteOperationResult(isSuccess(status), copyMethod);
+                result = new RemoteOperationResult<B>(isSuccess(status), copyMethod);
                 client.exhaustResponse(copyMethod.getResponseBodyAsStream());
             }
 
             Log.i(TAG, "Copy " + mSrcRemotePath + " to " + mTargetRemotePath + ": " + result.getLogMessage());
 
         } catch (Exception e) {
-            result = new RemoteOperationResult(e);
+            result = new RemoteOperationResult<B>(e);
             Log.e(TAG, "Copy " + mSrcRemotePath + " to " + mTargetRemotePath + ": " + result.getLogMessage(), e);
 
         } finally {
@@ -157,7 +157,7 @@ public class CopyFileRemoteOperation extends RemoteOperation {
      * @throws org.apache.jackrabbit.webdav.DavException If the status code is other than MultiStatus or if obtaining
      *                                                   the response XML document fails
      */
-    private RemoteOperationResult processPartialError(CopyMethod copyMethod)
+    private RemoteOperationResult<B> processPartialError(CopyMethod copyMethod)
             throws IOException, DavException {
         // Adding a list of failed descendants to the result could be interesting; or maybe not.
         // For the moment, let's take the easy way.
@@ -175,11 +175,11 @@ public class CopyFileRemoteOperation extends RemoteOperation {
             );
         }
 
-        RemoteOperationResult result;
+        RemoteOperationResult<B> result;
         if (failFound) {
-            result = new RemoteOperationResult(ResultCode.PARTIAL_COPY_DONE);
+            result = new RemoteOperationResult<B>(ResultCode.PARTIAL_COPY_DONE);
         } else {
-            result = new RemoteOperationResult(true, copyMethod);
+            result = new RemoteOperationResult<B>(true, copyMethod);
         }
 
         return result;

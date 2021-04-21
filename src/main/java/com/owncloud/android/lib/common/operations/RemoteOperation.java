@@ -53,7 +53,7 @@ import androidx.annotation.NonNull;
  * 
  * @author David A. Velasco 
  */
-public abstract class RemoteOperation implements Runnable {
+public abstract class RemoteOperation<B> implements Runnable {
 	
     private static final String TAG = RemoteOperation.class.getSimpleName();
 
@@ -94,12 +94,12 @@ public abstract class RemoteOperation implements Runnable {
 	 *  Abstract method to implement the operation in derived classes.
 	 */
 	@Deprecated
-    protected RemoteOperationResult run(OwnCloudClient client) {
+    protected RemoteOperationResult<B> run(OwnCloudClient client) {
         Log_OC.d(this, "Not used anymore");
         throw new UnsupportedOperationException("Not used anymore");
     }
 
-    public RemoteOperationResult run(CalldriveClient client) {
+    public RemoteOperationResult<B> run(CalldriveClient client) {
         // Once all RemoteOperation implement it, this should be abstract 
         Log_OC.d(this, "Not yet implemented");
         throw new UnsupportedOperationException("Not yet implemented");
@@ -120,7 +120,7 @@ public abstract class RemoteOperation implements Runnable {
      * @return          Result of the operation.
      */
     @Deprecated
-    public RemoteOperationResult execute(Account account, Context context) {
+    public RemoteOperationResult<B> execute(Account account, Context context) {
         if (account == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL Account");
         }
@@ -134,7 +134,7 @@ public abstract class RemoteOperation implements Runnable {
             mClient = OwnCloudClientManagerFactory.getDefaultSingleton().getClientFor(ocAccount, mContext);
         } catch (Exception e) {
             Log_OC.e(TAG, "Error while trying to access to " + mAccount.name, e);
-            return new RemoteOperationResult(e);
+            return new RemoteOperationResult<B>(e);
         }
         return run(mClient);
     }
@@ -152,7 +152,7 @@ public abstract class RemoteOperation implements Runnable {
      * @param context Android context for the component calling the method.
      * @return Result of the operation.
      */
-    public RemoteOperationResult executeCalldriveClient(@NonNull Account account, @NonNull Context context) {
+    public RemoteOperationResult<B> executeCalldriveClient(@NonNull Account account, @NonNull Context context) {
         mAccount = account;
         mContext = context.getApplicationContext();
         try {
@@ -160,7 +160,7 @@ public abstract class RemoteOperation implements Runnable {
             clientNew = OwnCloudClientManagerFactory.getDefaultSingleton().getCalldriveClientFor(ocAccount, mContext);
         } catch (Exception e) {
             Log_OC.e(TAG, "Error while trying to access to " + mAccount.name, e);
-            return new RemoteOperationResult(e);
+            return new RemoteOperationResult<B>(e);
         }
         return run(clientNew);
     }
@@ -175,7 +175,7 @@ public abstract class RemoteOperation implements Runnable {
 	 * @return			Result of the operation.
 	 */
 	@Deprecated
-    public RemoteOperationResult execute(OwnCloudClient client) {
+    public RemoteOperationResult<B> execute(OwnCloudClient client) {
         if (client == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL OwnCloudClient");
         }
@@ -193,7 +193,7 @@ public abstract class RemoteOperation implements Runnable {
      *                  the operation.
      * @return			Result of the operation.
      */
-    public RemoteOperationResult execute(@NonNull CalldriveClient client) {
+    public RemoteOperationResult<B> execute(@NonNull CalldriveClient client) {
         clientNew = client;
 
         return run(client);
@@ -322,7 +322,7 @@ public abstract class RemoteOperation implements Runnable {
 	 */
     @Override
     public final void run() {
-        RemoteOperationResult result = null;
+        RemoteOperationResult<B> result = null;
         boolean repeat;
         do {
             try{
@@ -349,11 +349,11 @@ public abstract class RemoteOperation implements Runnable {
                 Log_OC.e(TAG, "Error while trying to access to " + mAccount.name,
                         new AccountsException("I/O exception while trying to authorize the account",
                                 e));
-                result = new RemoteOperationResult(e);
+                result = new RemoteOperationResult<B>(e);
             
             } catch (AccountsException e) {
                 Log_OC.e(TAG, "Error while trying to access to " + mAccount.name, e);
-                result = new RemoteOperationResult(e);
+                result = new RemoteOperationResult<B>(e);
             }
     	
             if (result == null)
@@ -395,7 +395,7 @@ public abstract class RemoteOperation implements Runnable {
             AccountUtils.saveClient(mClient, mAccount, mContext);
         }
         
-        final RemoteOperationResult resultToSend = result;
+        final RemoteOperationResult<B> resultToSend = result;
         if (mListenerHandler != null && mListener != null) {
         	mListenerHandler.post(new Runnable() {
                 @Override

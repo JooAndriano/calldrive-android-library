@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 public class SetUserInfoRemoteOperationTest extends AbstractIT {
     @Test
     public void testSetEmail() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
         String oldValue = ((UserInfo) userInfo.getData().get(0)).getEmail();
 
@@ -58,7 +58,7 @@ public class SetUserInfoRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testSetDisplayName() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
 
         String oldUserId = client.getUserId();
@@ -79,7 +79,7 @@ public class SetUserInfoRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testSetPhone() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
         String oldValue = ((UserInfo) userInfo.getData().get(0)).phone;
 
@@ -98,7 +98,7 @@ public class SetUserInfoRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testSetAddress() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
         String oldValue = ((UserInfo) userInfo.getData().get(0)).address;
 
@@ -117,7 +117,7 @@ public class SetUserInfoRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testSetWebsite() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
         String oldValue = ((UserInfo) userInfo.getData().get(0)).website;
 
@@ -136,7 +136,7 @@ public class SetUserInfoRemoteOperationTest extends AbstractIT {
 
     @Test
     public void testSetTwitter() {
-        RemoteOperationResult userInfo = new GetUserInfoRemoteOperation().execute(client);
+        RemoteOperationResult<B> userInfo = new GetUserInfoRemoteOperation().execute(client);
         assertTrue(userInfo.isSuccess());
         String oldValue = ((UserInfo) userInfo.getData().get(0)).twitter;
 

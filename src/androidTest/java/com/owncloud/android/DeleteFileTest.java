@@ -58,7 +58,7 @@ public class DeleteFileTest extends AbstractIT {
         mFullPath2Folder = baseFolderPath + FOLDER_PATH;
         mFullPath2File = baseFolderPath + FILE_PATH;
 
-        RemoteOperationResult result = new CreateFolderRemoteOperation(mFullPath2Folder, true).execute(client);
+        RemoteOperationResult<B> result = new CreateFolderRemoteOperation(mFullPath2Folder, true).execute(client);
         assertTrue("Error creating folder" + mFullPath2Folder + ": " + result, result.isSuccess());
 
         File textFile = getFile(ASSETS__TEXT_FILE_NAME);
@@ -73,7 +73,7 @@ public class DeleteFileTest extends AbstractIT {
      */
     @Test
     public void testRemoveFolder() {
-        RemoteOperationResult result = new RemoveFileRemoteOperation(mFullPath2Folder).execute(client);
+        RemoteOperationResult<B> result = new RemoveFileRemoteOperation(mFullPath2Folder).execute(client);
         assertTrue(result.isSuccess());
     }
 
@@ -82,13 +82,13 @@ public class DeleteFileTest extends AbstractIT {
      */
     @Test
     public void testRemoveFile() {
-        RemoteOperationResult result = new RemoveFileRemoteOperation(mFullPath2File).execute(client);
+        RemoteOperationResult<B> result = new RemoveFileRemoteOperation(mFullPath2File).execute(client);
         assertTrue(result.isSuccess());
     }
 
     @After
     public void deleteFixtures() {
-        RemoteOperationResult result = new RemoveFileRemoteOperation(baseFolderPath).execute(client);
+        RemoteOperationResult<B> result = new RemoveFileRemoteOperation(baseFolderPath).execute(client);
 
         assertTrue("Error removing folder " + baseFolderPath + ": " + result, result.isSuccess());
     }

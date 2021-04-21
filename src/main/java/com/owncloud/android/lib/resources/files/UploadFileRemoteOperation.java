@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author masensio
  */
 
-public class UploadFileRemoteOperation extends RemoteOperation {
+public class UploadFileRemoteOperation extends RemoteOperation<B> {
 	private static final String OC_TOTAL_LENGTH_HEADER = "OC-Total-Length";
 	private static final String IF_MATCH_HEADER = "If-Match";
     private static final String OC_X_OC_MTIME_HEADER = "X-OC-Mtime";
@@ -108,8 +108,8 @@ public class UploadFileRemoteOperation extends RemoteOperation {
 	}
 
 	@Override
-	protected RemoteOperationResult run(OwnCloudClient client) {
-		RemoteOperationResult result;
+	protected RemoteOperationResult<B> run(OwnCloudClient client) {
+		RemoteOperationResult<B> result;
 		DefaultHttpMethodRetryHandler oldRetryHandler =
 			(DefaultHttpMethodRetryHandler) client.getParams().getParameter(HttpMethodParams.RETRY_HANDLER);
 
@@ -128,7 +128,7 @@ public class UploadFileRemoteOperation extends RemoteOperation {
 
 			if (cancellationRequested.get()) {
 				// the operation was cancelled before getting it's turn to be executed in the queue of uploads
-				result = new RemoteOperationResult(new OperationCancelledException());
+				result = new RemoteOperationResult<B>(new OperationCancelledException());
 
 			} else {
 				// perform the upload
@@ -138,12 +138,12 @@ public class UploadFileRemoteOperation extends RemoteOperation {
 		} catch (Exception e) {
 			if (putMethod != null && putMethod.isAborted()) {
                 if (cancellationRequested.get() && cancellationReason != null) {
-                    result = new RemoteOperationResult(cancellationReason);
+                    result = new RemoteOperationResult<B>(cancellationReason);
                 } else {
-                    result = new RemoteOperationResult(new OperationCancelledException());
+                    result = new RemoteOperationResult<B>(new OperationCancelledException());
                 }
 			} else {
-				result = new RemoteOperationResult(e);
+				result = new RemoteOperationResult<B>(e);
 			}
 		} finally {
 			// reset previous retry handler
@@ -160,9 +160,9 @@ public class UploadFileRemoteOperation extends RemoteOperation {
                 status == HttpStatus.SC_NO_CONTENT));
 	}
 
-	protected RemoteOperationResult uploadFile(OwnCloudClient client) throws IOException {
+	protected RemoteOperationResult<B> uploadFile(OwnCloudClient client) throws IOException {
 		int status;
-		RemoteOperationResult result;
+		RemoteOperationResult<B> result;
 
 		try {
 			File f = new File(localPath);
@@ -179,7 +179,7 @@ public class UploadFileRemoteOperation extends RemoteOperation {
 			putMethod.setRequestEntity(entity);
 			status = client.executeMethod(putMethod);
 
-			result = new RemoteOperationResult(isSuccess(status), putMethod);
+			result = new RemoteOperationResult<B>(isSuccess(status), putMethod);
 
 			client.exhaustResponse(putMethod.getResponseBodyAsStream());
 
