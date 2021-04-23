@@ -1,8 +1,5 @@
-/* Calldrive Android Library is available under MIT license
- *
- *   @author Tobias Kaminsky
- *   Copyright (C) 2020 Tobias Kaminsky
- *   Copyright (C) 2020 Calldrive GmbH
+/* ownCloud Android Library is available under MIT license
+ *   Copyright (C) 2015 ownCloud Inc.
  *   
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +22,25 @@
  *
  */
 
-package com.calldrive.operations
-
-import com.calldrive.common.OkHttpMethodBase
-import okhttp3.Request
+package com.owncloud.android.lib.resources.shares;
 
 /**
- * HTTP DELETE method that uses OkHttp with new CalldriveClient
+ * Contains Constants for Share Operation
+ * 
+ * @author masensio
+ *
  */
-class DeleteMethod(
-    uri: String,
-    useOcsApiRequestHeader: Boolean
-) : OkHttpMethodBase(uri, useOcsApiRequestHeader) {
-    override fun applyType(temp: Request.Builder) {
-        temp.delete()
+
+public class ShareUtils {
+
+	// OCS Route
+	public static final String SHARING_API_PATH ="/ocs/v2.php/apps/files_sharing/api/v1/shares";
+
+    // String to build the link with the token of a share:
+    public static final String SHARING_LINK_PATH_AFTER_VERSION_8 = "/index.php/s/";
+
+    public static String getSharingLinkPath() {
+        return SHARING_LINK_PATH_AFTER_VERSION_8;
     }
+
 }

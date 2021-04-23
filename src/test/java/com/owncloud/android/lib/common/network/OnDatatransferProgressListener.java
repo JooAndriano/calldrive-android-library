@@ -1,8 +1,6 @@
-/* Calldrive Android Library is available under MIT license
- *
- *   @author Tobias Kaminsky
- *   Copyright (C) 2020 Tobias Kaminsky
- *   Copyright (C) 2020 Calldrive GmbH
+/* ownCloud Android Library is available under MIT license
+ *   Copyright (C) 2015 ownCloud Inc.
+ *   Copyright (C) 2012  Bartek Przybylski
  *   
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +23,8 @@
  *
  */
 
-package com.calldrive.operations
+package com.owncloud.android.lib.common.network;
 
-import com.calldrive.common.OkHttpMethodBase
-import okhttp3.Request
-
-/**
- * HTTP DELETE method that uses OkHttp with new CalldriveClient
- */
-class DeleteMethod(
-    uri: String,
-    useOcsApiRequestHeader: Boolean
-) : OkHttpMethodBase(uri, useOcsApiRequestHeader) {
-    override fun applyType(temp: Request.Builder) {
-        temp.delete()
-    }
+public interface OnDatatransferProgressListener {
+    void onTransferProgress(long progressRate, long totalTransferredSoFar, long totalToTransfer, String fileAbsoluteName);
 }

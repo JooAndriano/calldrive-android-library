@@ -23,19 +23,17 @@
 
 package com.owncloud.android.lib.resources.users;
 
-import com.calldrive.common.CalldriveClient;
-import com.calldrive.operations.PutMethod;
+import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PutMethod;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
-
-public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
+public class SetUserInfoRemoteOperation extends RemoteOperation {
 
     private static final String TAG = SetUserInfoRemoteOperation.class.getSimpleName();
 
@@ -60,8 +58,8 @@ public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
         }
     }
 
-    private final Field field;
-    private final String value;
+    private Field field;
+    private String value;
 
     public SetUserInfoRemoteOperation(Field field, String value) {
         this.field = field;
@@ -69,34 +67,32 @@ public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
     }
 
     @Override
-    public RemoteOperationResult<Boolean> run(CalldriveClient client) {
-        RemoteOperationResult<Boolean> result;
+    protected RemoteOperationResult run(OwnCloudClient client) {
+        RemoteOperationResult result;
         PutMethod method = null;
 
         try {
-            // request body
-            MediaType json = MediaType.parse("application/json; charset=utf-8");
-            RequestBody requestBody = RequestBody.create(json, "{\"key\": \"" + field.getFieldName() + "\"" +
-                    ", \"value\": \"" + value + "\"}");
+            method = new PutMethod(client.getBaseUri() + OCS_ROUTE_PATH + client.getUserId());
+            method.addRequestHeader(OCS_API_HEADER, OCS_API_HEADER_VALUE);
 
-            // remote request
-            method = new PutMethod(client.getBaseUri() + OCS_ROUTE_PATH + client.getUserId(),
-                    true,
-                    requestBody);
+            NameValuePair[] putParams = new NameValuePair[2];
+            putParams[0] = new NameValuePair("key", field.getFieldName());
+            putParams[1] = new NameValuePair("value", value);
+            method.setQueryString(putParams);
 
-            int status = client.execute(method);
+            int status = client.executeMethod(method);
 
             if (status == HttpStatus.SC_OK) {
-                result = new RemoteOperationResult<>(true, method);
+                result = new RemoteOperationResult(true, method);
 
             } else {
-                result = new RemoteOperationResult<>(false, method);
+                result = new RemoteOperationResult(false, method);
                 String response = method.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while setting user information");
                 Log_OC.e(TAG, "*** status code: " + status + "; response: " + response);
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while setting OC user information", e);
         } finally {
             if (method != null)
