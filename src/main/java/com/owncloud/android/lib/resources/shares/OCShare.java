@@ -1,22 +1,22 @@
 /* ownCloud Android Library is available under MIT license
  *   Copyright (C) 2015 ownCloud Inc.
- *   
+ *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
  *   in the Software without restriction, including without limitation the rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
- *   
+ *
  *   The above copyright notice and this permission notice shall be included in
  *   all copies or substantial portions of the Software.
- *   
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
- *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
- *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+ *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *   THE SOFTWARE.
  *
@@ -39,7 +39,7 @@ import lombok.Setter;
 
 /**
  * Contains the data of a Share from the Share API
- * 
+ *
  * @author masensio
  *
  */
@@ -103,12 +103,12 @@ public class OCShare implements Parcelable, Serializable {
     @Getter private String note;
     @Getter @Setter private boolean hideFileDownload;
     @Getter @Setter private String label;
-    
+
     public OCShare() {
     	super();
     	resetData();
     }
-    
+
 	public OCShare(String path) {
 		resetData();
         if (path == null || path.length() <= 0 || !path.startsWith(FileUtils.PATH_SEPARATOR)) {
@@ -141,8 +141,8 @@ public class OCShare implements Parcelable, Serializable {
         note = "";
         hideFileDownload = false;
         label = "";
-    }	
-    
+    }
+
     // custom Getters and Setters
     public void setShareWith(String shareWith) {
         this.shareWith = (shareWith != null) ? shareWith : "";
@@ -176,7 +176,7 @@ public class OCShare implements Parcelable, Serializable {
         this.note = note;
     }
 
-    /** 
+    /**
      * Parcelable Methods
      */
     public static final Parcelable.Creator<OCShare> CREATOR = new Parcelable.Creator<OCShare>() {
@@ -190,16 +190,16 @@ public class OCShare implements Parcelable, Serializable {
             return new OCShare[size];
         }
     };
-    
+
     /**
      * Reconstruct from parcel
-     * 
+     *
      * @param source The source parcel
-     */    
+     */
     protected OCShare(Parcel source) {
     	readFromParcel(source);
     }
-    
+
     public void readFromParcel(Parcel source) {
         id = source.readLong();
 
@@ -231,8 +231,8 @@ public class OCShare implements Parcelable, Serializable {
 	public int describeContents() {
 		return this.hashCode();
 	}
-	
-	
+
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
@@ -253,5 +253,13 @@ public class OCShare implements Parcelable, Serializable {
         dest.writeInt(isPasswordProtected ? 1 : 0);
         dest.writeInt(hideFileDownload ? 1 : 0);
         dest.writeString(label);
+    }
+
+    public ShareType getShareType() {
+        return shareType;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

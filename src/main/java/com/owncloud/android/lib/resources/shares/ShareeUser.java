@@ -82,4 +82,16 @@ public class ShareeUser implements Parcelable {
                 this.displayName.equals(that.displayName) &&
                 this.shareType == that.shareType;
     }
+
+    public ShareType getShareType() {
+        return shareType;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

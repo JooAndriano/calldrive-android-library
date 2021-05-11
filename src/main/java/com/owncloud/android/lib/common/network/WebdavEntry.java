@@ -1,22 +1,22 @@
 /* ownCloud Android Library is available under MIT license
  *   Copyright (C) 2015 ownCloud Inc.
- *   
+ *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
  *   in the Software without restriction, including without limitation the rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
- *   
+ *
  *   The above copyright notice and this permission notice shall be included in
  *   all copies or substantial portions of the Software.
- *   
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
- *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
- *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+ *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *   THE SOFTWARE.
  *
@@ -115,7 +115,7 @@ public class WebdavEntry {
 
         Namespace ocNamespace = Namespace.getNamespace(NAMESPACE_OC);
         Namespace ncNamespace = Namespace.getNamespace(NAMESPACE_NC);
-        
+
         if (ms.getStatus().length != 0) {
             uri = ms.getHref();
 
@@ -154,7 +154,7 @@ public class WebdavEntry {
                     }
                 }
             }
-            
+
             // check if it's a folder in the standard way: see RFC2518 12.2 . RFC4918 14.3
             // {DAV:}resourcetype
             prop = propSet.get(DavPropertyName.RESOURCETYPE);
@@ -303,7 +303,7 @@ public class WebdavEntry {
             } else {
                 hasPreview = true;
             }
-            
+
             // NC trashbin-original-location <nc:trashbin-original-location>
             prop = propSet.get(TRASHBIN_ORIGINAL_LOCATION, ncNamespace);
             if (prop != null) {
@@ -348,7 +348,7 @@ public class WebdavEntry {
                     ArrayList list = (ArrayList) prop.getValue();
 
                     List<ShareeUser> tempList = new ArrayList<>();
-                    
+
                     for (int i = 0; i < list.size(); i++) {
                         Element element = (Element) list.get(i);
 
@@ -394,7 +394,7 @@ public class WebdavEntry {
             return null;
         }
     }
-    
+
     private String extractDisplayName(Element element) {
         Node displayName = element.getElementsByTagNameNS(NAMESPACE_NC, SHAREES_DISPLAY_NAME).item(0);
         if (displayName != null && displayName.getFirstChild() != null) {
@@ -423,7 +423,7 @@ public class WebdavEntry {
 
         return ShareType.NO_SHARED;
     }
-    
+
     public String decodedPath() {
         return Uri.decode(path);
     }
@@ -441,5 +441,33 @@ public class WebdavEntry {
         quotaAvailableBytes = null;
         favorite = false;
         hasPreview = false;
+    }
+
+    public String getTrashbinFilename() {
+        return trashbinFilename;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getTrashbinOriginalLocation() {
+        return trashbinOriginalLocation;
+    }
+
+    public long getTrashbinDeletionTimestamp() {
+        return trashbinDeletionTimestamp;
+    }
+
+    public String getRemoteId() {
+        return remoteId;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public long getContentLength() {
+        return contentLength;
     }
 }

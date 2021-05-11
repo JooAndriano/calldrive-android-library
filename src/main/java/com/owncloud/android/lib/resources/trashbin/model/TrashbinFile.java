@@ -70,12 +70,22 @@ public class TrashbinFile implements Parcelable, Serializable, ServerFileInterfa
     }
 
     @Override
+    public String getRemoteId() {
+        return null;
+    }
+
+    @Override
     public boolean isFolder() {
         return DIRECTORY.equals(mimeType);
     }
 
+    @Override
+    public long getFileLength() {
+        return 0;
+    }
+
     public boolean isHidden() {
-        return getFileName().startsWith(".");
+        return getFileName() != null ? getFileName().startsWith(".") : false;
     }
 
     @Override
@@ -165,5 +175,52 @@ public class TrashbinFile implements Parcelable, Serializable, ServerFileInterfa
         dest.writeString(mimeType);
         dest.writeLong(fileLength);
         dest.writeString(remoteId);
+    }
+
+    public String getOriginalLocation() {
+        return originalLocation;
+    }
+
+    public long getDeletionTimestamp() {
+        return deletionTimestamp;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public void setFileLength(long fileLength) {
+        this.fileLength = fileLength;
+    }
+
+    public void setOriginalLocation(String originalLocation) {
+        this.originalLocation = originalLocation;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
+
+    @Override
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    @Override
+    public String getRemotePath() {
+        return remotePath;
+    }
+
+    public void setDeletionTimestamp(long deletionTimestamp) {
+        this.deletionTimestamp = deletionTimestamp;
+    }
+
+    public void setRemoteId(String remoteId) {
+        this.remoteId = remoteId;
     }
 }
