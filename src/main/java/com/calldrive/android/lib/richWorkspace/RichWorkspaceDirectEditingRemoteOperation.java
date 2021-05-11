@@ -63,7 +63,7 @@ public class RichWorkspaceDirectEditingRemoteOperation extends RemoteOperation {
         Utf8PostMethod postMethod = null;
 
         try {
-            postMethod = new Utf8PostMethod(client.getBaseUri() + DIRECT_ENDPOINT + JSON_FORMAT);
+            postMethod = new Utf8PostMethod(client.getWebdavUri()+ DIRECT_ENDPOINT + JSON_FORMAT);
             postMethod.addRequestHeader(CONTENT_TYPE, JSON_ENCODED);
             postMethod.addRequestHeader(OCS_API_HEADER, OCS_API_HEADER_VALUE);
 

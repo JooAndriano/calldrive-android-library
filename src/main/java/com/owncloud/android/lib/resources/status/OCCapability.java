@@ -104,7 +104,7 @@ public class OCCapability {
     private String richDocumentsProductName;
 
     private CapabilityBooleanType activity;
-    
+
     private CapabilityBooleanType extendedSupport;
 
     // DirectEditing
@@ -112,6 +112,9 @@ public class OCCapability {
 
     // Etag for capabilities
     private String etag;
+
+    private CapabilityBooleanType userStatus;
+    private CapabilityBooleanType userStatusSupportsEmoji;
 
     public OCCapability() {
         id = 0;
@@ -168,8 +171,11 @@ public class OCCapability {
         richDocumentsDirectEditing = CapabilityBooleanType.FALSE;
         richDocumentsTemplatesAvailable = CapabilityBooleanType.FALSE;
         richDocumentsProductName = "Collabora Online";
-        
+
         extendedSupport = CapabilityBooleanType.UNKNOWN;
+
+        userStatus = CapabilityBooleanType.UNKNOWN;
+        userStatusSupportsEmoji = CapabilityBooleanType.UNKNOWN;
 
         directEditingEtag = "";
         etag = "";
@@ -177,5 +183,117 @@ public class OCCapability {
 
     public OwnCloudVersion getVersion() {
         return new OwnCloudVersion(versionMayor + VERSION_DOT + versionMinor + VERSION_DOT + versionMicro);
+    }
+
+    public void setVersionMayor(int versionMayor) {
+        this.versionMayor = versionMayor;
+    }
+
+    public void setActivity(CapabilityBooleanType activity) {
+        this.activity = activity;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public void setServerSlogan(String serverSlogan) {
+        this.serverSlogan = serverSlogan;
+    }
+
+    public void setServerColor(String serverColor) {
+        this.serverColor = serverColor;
+    }
+
+    public void setServerLogo(String serverLogo) {
+        this.serverLogo = serverLogo;
+    }
+
+    public void setServerBackground(String serverBackground) {
+        this.serverBackground = serverBackground;
+    }
+
+    public void setServerTextColor(String serverTextColor) {
+        this.serverTextColor = serverTextColor;
+    }
+
+    public void setServerElementColor(String serverElementColor) {
+        this.serverElementColor = serverElementColor;
+    }
+
+    public void setServerElementColorBright(String serverElementColorBright) {
+        this.serverElementColorBright = serverElementColorBright;
+    }
+
+    public void setServerElementColorDark(String serverElementColorDark) {
+        this.serverElementColorDark = serverElementColorDark;
+    }
+
+    public void setServerBackgroundDefault(CapabilityBooleanType serverBackgroundDefault) {
+        this.serverBackgroundDefault = serverBackgroundDefault;
+    }
+
+    public void setServerBackgroundPlain(CapabilityBooleanType serverBackgroundPlain) {
+        this.serverBackgroundPlain = serverBackgroundPlain;
+    }
+
+    public void setSupportsNotificationsV2(CapabilityBooleanType supportsNotificationsV2) {
+        this.supportsNotificationsV2 = supportsNotificationsV2;
+    }
+
+    public CapabilityBooleanType getSupportsNotificationsV2() {
+        return supportsNotificationsV2;
+    }
+
+    public void setSupportsNotificationsV1(CapabilityBooleanType supportsNotificationsV1) {
+        this.supportsNotificationsV1 = supportsNotificationsV1;
+    }
+
+    public void setExternalLinks(CapabilityBooleanType externalLinks) {
+        this.externalLinks = externalLinks;
+    }
+
+    public void setFullNextSearchEnabled(CapabilityBooleanType fullNextSearchEnabled) {
+        this.fullNextSearchEnabled = fullNextSearchEnabled;
+    }
+
+    public void setFullNextSearchFiles(CapabilityBooleanType fullNextSearchFiles) {
+        this.fullNextSearchFiles = fullNextSearchFiles;
+    }
+
+    public void setEndToEndEncryption(CapabilityBooleanType endToEndEncryption) {
+        this.endToEndEncryption = endToEndEncryption;
+    }
+
+    public void setRichDocuments(CapabilityBooleanType richDocuments) {
+        this.richDocuments = richDocuments;
+    }
+
+    public void setRichDocumentsMimeTypeList(List<String> richDocumentsMimeTypeList) {
+        this.richDocumentsMimeTypeList = richDocumentsMimeTypeList;
+    }
+
+    public void setRichDocumentsOptionalMimeTypeList(List<String> richDocumentsOptionalMimeTypeList) {
+        this.richDocumentsOptionalMimeTypeList = richDocumentsOptionalMimeTypeList;
+    }
+
+    public void setRichDocumentsDirectEditing(CapabilityBooleanType richDocumentsDirectEditing) {
+        this.richDocumentsDirectEditing = richDocumentsDirectEditing;
+    }
+
+    public void setRichDocumentsTemplatesAvailable(CapabilityBooleanType richDocumentsTemplatesAvailable) {
+        this.richDocumentsTemplatesAvailable = richDocumentsTemplatesAvailable;
+    }
+
+    public void setRichDocumentsProductName(String richDocumentsProductName) {
+        this.richDocumentsProductName = richDocumentsProductName;
+    }
+
+    public void setUserStatus(CapabilityBooleanType userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public void setUserStatusSupportsEmoji(CapabilityBooleanType userStatusSupportEmoji) {
+        this.userStatusSupportsEmoji = userStatusSupportEmoji;
     }
 }

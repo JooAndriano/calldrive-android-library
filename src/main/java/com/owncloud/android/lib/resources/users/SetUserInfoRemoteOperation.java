@@ -35,7 +35,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 
-public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
+public class SetUserInfoRemoteOperation extends RemoteOperation {
 
     private static final String TAG = SetUserInfoRemoteOperation.class.getSimpleName();
 
@@ -69,8 +69,8 @@ public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
     }
 
     @Override
-    public RemoteOperationResult<Boolean> run(CalldriveClient client) {
-        RemoteOperationResult<Boolean> result;
+    public RemoteOperationResult run(CalldriveClient client) {
+        RemoteOperationResult result;
         PutMethod method = null;
 
         try {
@@ -87,16 +87,16 @@ public class SetUserInfoRemoteOperation extends RemoteOperation<Boolean> {
             int status = client.execute(method);
 
             if (status == HttpStatus.SC_OK) {
-                result = new RemoteOperationResult<>(true, method);
+                result = new RemoteOperationResult(true, method);
 
             } else {
-                result = new RemoteOperationResult<>(false, method);
+                result = new RemoteOperationResult(false, method);
                 String response = method.getResponseBodyAsString();
                 Log_OC.e(TAG, "Failed response while setting user information");
                 Log_OC.e(TAG, "*** status code: " + status + "; response: " + response);
             }
         } catch (Exception e) {
-            result = new RemoteOperationResult<>(e);
+            result = new RemoteOperationResult(e);
             Log_OC.e(TAG, "Exception while setting OC user information", e);
         } finally {
             if (method != null)
